@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="{% static "lib/bootstrap/css/bootstrap.min.css" %}">
+    <link rel="stylesheet" href="{% static "lib/mdb/css/mdb.min.css" %}">
+    <script src="{% static "lib/jquery/js/jquery-3.4.1.min.js" %}"></script>
+    <script src="{% static "lib/bootstrap/js/bootstrap.min.js" %}"></script>
+    <title>Inicio de sesión</title>
+</head>
+<body class="grey lighten-3">
+
+<!--Main Navigation-->
+<header>
+    <nav class="navbar fixed-top navbar-expand-lg navbar-light white scrolling-navbar">
+        <div class="container-fluid" style="height: 50px;">
+            <div class="list-group list-group-flush" style="font-weight: 500; font-size: 22px;">
+                Análisis de Información sobre Big Data - Taller 1
+            </div>
+        </div>
+    </nav>
+</header>
+<!--Main Navigation-->
+
+<!--Main layout-->
+<main class="pt-5 mx-lg-5">
+    <div class="container-fluid mt-5">
+        <div class="row wow fadeIn">
+            <div class="col-md-12 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row"><br/></div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <select class="browser-default custom-select" id="cmbArchivo">
+                                    <option value="" selected>Seleccione un archivo</option>
+                                    {% for archivo in lstArchivo %}
+                                        <option value="{{ archivo }}">{{ archivo }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <select class="browser-default custom-select" id="cmbReto">
+                                    <option value="" selected>Seleccione un reto</option>
+                                    <option value="1">Conteo de palabras</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row"><br/></div>
+                        <div class="row">
+                            <div class="col-md-4"></div>
+                            <div class="col-md-4" style="text-align: center;">
+                                <button class="btn btn-md btn-mdb-color" type="button" id="btnEjecutarReto"
+                                        onclick="EjecutarReto();">
+                                    Ejecutar Reto
+                                </button>
+                            </div>
+                            <div class="col-md-4"></div>
+                        </div>
+                        <div class="row"><br/></div>
+                        <div class="row">
+                            <div class="col-md-2"></div>
+                            <div class="col-md-8" style="text-align: center;">
+                                <label for="taResultado">Resultado: </label>
+                                <textarea class="form-control" id="taResultado" rows="7"></textarea>
+                            </div>
+                            <div class="col-md-2"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<!--Main layout-->
+
+<!--Footer-->
+<footer class="page-footer text-center font-small primary-color-dark darken-2 mt-4 wow fadeIn">
+    <div class="footer-copyright py-3">
+        <p><b>Universidad de los Andes</b> © 2020 Copyright</p>
+    </div>
+</footer>
+<!--Footer-->
+</body>
+<script>
+    function EjecutarReto() {
+        const vNombreArchivo = $('#cmbArchivo').val();
+        const vIdReto = $('#cmbReto').val();
+
+        if (!vNombreArchivo || !vIdReto) {
+            alert('No ha seleccionado un archivo o un reto.');
+            return;
+        }
+
+        const vJson = JSON.stringify({
+            "NombreArchivo": vNombreArchivo,
+            "IdReto": vIdReto
+        });
+        const vEncode = encodeURIComponent(vJson);
+
+        $.ajax({
+            url: '/EjecutarReto/' + vEncode + '/',
+            dataType: 'JSON',
+            type: 'GET',
+            error: function (result) {
+                $('#taResultado').val(result.responseText);
+            }
+        });
+    }
+</script>
+</html>

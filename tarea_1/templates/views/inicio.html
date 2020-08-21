@@ -4,11 +4,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
     <link rel="stylesheet" href="{% static "lib/bootstrap/css/bootstrap.min.css" %}">
     <link rel="stylesheet" href="{% static "lib/mdb/css/mdb.min.css" %}">
+    <link rel="stylesheet" href="{% static "lib/bootstrap-select/css/bootstrap-select.min.css" %}">
     <script src="{% static "lib/jquery/js/jquery-3.4.1.min.js" %}"></script>
+    <script src="{% static "lib/mdb/js/popper.min.js" %}"></script>
     <script src="{% static "lib/bootstrap/js/bootstrap.min.js" %}"></script>
-    <title>Inicio de sesión</title>
+    <script src="{% static "lib/bootstrap-select/js/bootstrap-select.min.js" %}"></script>
+
+    <title>Taller 1</title>
 </head>
 <body class="grey lighten-3">
 
@@ -16,7 +21,7 @@
 <header>
     <nav class="navbar fixed-top navbar-expand-lg navbar-light white scrolling-navbar">
         <div class="container-fluid" style="height: 50px;">
-            <div class="list-group list-group-flush" style="font-weight: 500; font-size: 22px;">
+            <div class="list-group list-group-flush" style="font-weight: 500; font-size: 22px; color: #5D6D7E;">
                 Análisis de Información sobre Big Data - Taller 1
             </div>
         </div>
@@ -34,17 +39,20 @@
                         <div class="row"><br/></div>
                         <div class="row">
                             <div class="col-md-6">
-                                <select class="browser-default custom-select" id="cmbArchivo">
-                                    <option value="" selected>Seleccione un archivo</option>
-                                    {% for archivo in lstArchivo %}
-                                        <option value="{{ archivo }}">{{ archivo }}</option>
+                                <!--<select class="browser-default custom-select" id="cmbArchivo">-->
+                                <select class="form-control selectpicker" id="cmbArchivo" style="padding: 10px;" title="Seleccione un archivo" multiple>
+                                    {% for item in lstArchivo %}
+                                        <option value="{{ item }}">{{ item }}</option>
                                     {% endfor %}
                                 </select>
                             </div>
                             <div class="col-md-6">
-                                <select class="browser-default custom-select" id="cmbReto">
+                                <select class="browser-default custom-select" id="cmbReto" style="margin-top: 10px;">
                                     <option value="" selected>Seleccione un reto</option>
                                     <option value="1">Conteo de palabras</option>
+                                    <option value="2">Cantidad por palabra</option>
+                                    <option value="3">Palabras frecuentes</option>
+                                    <option value="4">Archivo con más palabras</option>
                                 </select>
                             </div>
                         </div>
@@ -77,14 +85,19 @@
 <!--Main layout-->
 
 <!--Footer-->
-<footer class="page-footer text-center font-small primary-color-dark darken-2 mt-4 wow fadeIn">
+<footer class="page-footer text-center font-small mt-4 wow fadeIn" style="background-color: #1A5276;">
     <div class="footer-copyright py-3">
         <p><b>Universidad de los Andes</b> © 2020 Copyright</p>
     </div>
 </footer>
 <!--Footer-->
+
 </body>
 <script>
+    $(document).ready(function () {
+        $('.selectpicker').selectpicker();
+    });
+
     function EjecutarReto() {
         const vNombreArchivo = $('#cmbArchivo').val();
         const vIdReto = $('#cmbReto').val();

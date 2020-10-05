@@ -1,4 +1,4 @@
-package uniandes.rf2.mr;
+package uniandes.rf1.mr;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -19,25 +19,23 @@ public class WCMapper extends Mapper<LongWritable, Text, Text, DoubleWritable> {
 
         Logger logger = Logger.getLogger(WCMapper.class);
         Configuration conf = context.getConfiguration();
-        int pZonaDesde = Integer.parseInt(conf.get("ZonaDesde"));
-        int pZonaHasta = Integer.parseInt(conf.get("ZonaHasta"));
-        int pMes = Integer.parseInt(conf.get("Mes"));
-        //logger.info("TRAZA PERSONALIZADA."+pZonaDesde);
+        int pHoraDesde = Integer.parseInt(conf.get("HoraDesde"));
+        int pHoraHasta = Integer.parseInt(conf.get("HoraHasta"));
+
+        //logger.info("TRAZA PERSONALIZADA."+fileName);
         try {
             String[] vLstColumna = value.toString().split(",");
             IndexEntity index = Helper.GetIndex(vLstColumna);
             int vZonaDesde = Integer.parseInt(vLstColumna[index.ZonaDesde]);
-            int vZonaHasta = Integer.parseInt(vLstColumna[index.ZonaHasta]);
             String vStringFechaDesde = vLstColumna[index.FechaDesde];
             Date vFechaDesde = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(vStringFechaDesde);
 
             Calendar vCalendar = new GregorianCalendar();
             vCalendar.setTime(vFechaDesde);
-            int month = vCalendar.get(Calendar.MONTH) + 1;
-
-            if (vZonaDesde == pZonaDesde && vZonaHasta == pZonaHasta && month == pMes) {
-                Double vMontoTotal = Double.parseDouble(vLstColumna[index.MontoTotal]);
-                context.write(new Text("Datos"), new DoubleWritable(vMontoTotal));
+            int hour = vCalendar.get(Calendar.HOUR_OF_DAY);
+            
+            if (hour >= pHoraDesde && hour <= pHoraHasta) {
+                context.write(new Text("Datos_" + vZonaDesde + "_" + index.Tipo), new DoubleWritable(1.0));
             }
         } catch (Exception ex) {
         }

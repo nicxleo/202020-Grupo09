@@ -1,4 +1,4 @@
-package uniandes.rf2.mr;
+package uniandes.rf1.mr;
 
 import java.io.IOException;
 import org.apache.hadoop.fs.Path;
@@ -17,12 +17,11 @@ public class JobMR {
 
     private static String Entrada;
     private static String Salida;
-    private static String ZonaDesde;
-    private static String ZonaHasta;
-    private static String Mes;
+    private static String HoraDesde;
+    private static String HoraHasta;
 
     public static void main(String[] args) {
-        int vMinParams = 5;
+        int vMinParams = 4;
         if (args.length < vMinParams) {
             System.out.println("La aplicación requiere de (" + vMinParams + ") parámetros.");
             System.exit(-1);
@@ -30,9 +29,8 @@ public class JobMR {
 
         Entrada = args[0];
         Salida = args[1];
-        ZonaDesde = args[2];
-        ZonaHasta = args[3];
-        Mes = args[4];
+        HoraDesde = args[2];
+        HoraHasta = args[3];        
 
         try {
             RunJob();
@@ -46,13 +44,12 @@ public class JobMR {
         //////////////////////
         //Parameters
         //////////////////////
-        conf.set("ZonaDesde", ZonaDesde);
-        conf.set("ZonaHasta", ZonaHasta);
-        conf.set("Mes", Mes);
+        conf.set("HoraDesde", HoraDesde);
+        conf.set("HoraHasta", HoraHasta);
         //////////////////////
         //Job
         //////////////////////
-        Job wcJob = Job.getInstance(conf, "RF2 Job");
+        Job wcJob = Job.getInstance(conf, "RF1 Job");
         wcJob.setJarByClass(JobMR.class);
         //////////////////////
         //Mapper

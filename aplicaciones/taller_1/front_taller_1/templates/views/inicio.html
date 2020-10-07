@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="{% static "lib/bootstrap/css/bootstrap.min.css" %}">
+    <link rel="stylesheet" href="{% static "lib/mdb/css/mdb.min.css" %}">
+    <link rel="stylesheet" href="{% static "lib/mdb/css/style.css" %}">
+    <script src="{% static "lib/jquery/js/jquery-3.4.1.min.js" %}"></script>
+    <script src="{% static "lib/bootstrap/js/bootstrap.min.js" %}"></script>
+    <title>Taller 1 – Procesamiento escalable</title>
+</head>
+<body class="grey lighten-3">
+
+<!--Main Navigation-->
+<header>
+    <nav class="navbar fixed-top navbar-expand-lg navbar-light white scrolling-navbar">
+        <div class="container-fluid" style="height: 50px;">
+            <div style="font-weight: 500; font-size: 22px;color: #2E4053;">
+                Análisis de Información sobre Big Data
+            </div>
+            <div>
+                <i>Taller 1 – Procesamiento escalable</i>
+            </div>
+        </div>
+    </nav>
+</header>
+<!--Main Navigation-->
+
+<!--Main layout-->
+<main class="pt-5 mx-lg-5">
+    <div class="container-fluid mt-5">
+        <div class="row wow fadeIn">
+            <div class="col-md-12 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <nav>
+                            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                                <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home"
+                                   role="tab" aria-controls="nav-home" aria-selected="true">RF1</a>
+                                <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile"
+                                   role="tab" aria-controls="nav-profile" aria-selected="false">RF2</a>
+                                <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-contact"
+                                   role="tab" aria-controls="nav-contact" aria-selected="false">RF3</a>
+                            </div>
+                        </nav>
+                        <div class="tab-content" id="nav-tabContent">
+                            <div class="tab-pane fade show active" id="nav-home" role="tabpanel"
+                                 aria-labelledby="nav-home-tab">
+                                <div class="row" style="display: inline;"><br/></div>
+                                <div class="row">
+                                    <div class="col-md-3"></div>
+                                    <div class="col-md-3 text-center">
+                                        <select class="browser-default custom-select" id="cmbHoraInicio">
+                                            <option value="" selected>Seleccione la hora inicial</option>
+                                            {% for hora in lstHora %}
+                                                <option value="{{ hora }}">{{ hora }}:00</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3 text-center">
+                                        <select class="browser-default custom-select" id="cmbHoraFin">
+                                            <option value="" selected>Seleccione la hora final</option>
+                                            {% for hora in lstHora %}
+                                                <option value="{{ hora }}">{{ hora }}:00</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3"></div>
+                                </div>
+                                <div class="row" style="display: inline;"><br/></div>
+                                <div class="row">
+                                    <div class="col-md-4"></div>
+                                    <div class="col-md-4 text-center">
+                                        <button class="btn btn-md btn-mdb-color" type="button"
+                                                id="btnEjecutarRF1" onclick="EjecutarRF1();">
+                                            Ejecutar Reto
+                                        </button>
+                                        <div class="lds-ring hidden" aria-role="none" id="loadingRF1">
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4"></div>
+                                </div>
+                                <div class="row" style="display: inline;"><br/></div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-md-2"></div>
+                                    <div class="col-md-8 text-center">
+                                        <textarea class="form-control" id="taResultadoRF1" rows="7"></textarea>
+                                    </div>
+                                    <div class="col-md-2"></div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="nav-profile" role="tabpanel"
+                                 aria-labelledby="nav-profile-tab">...
+                            </div>
+                            <div class="tab-pane fade" id="nav-contact" role="tabpanel"
+                                 aria-labelledby="nav-contact-tab">...
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<!--Main layout-->
+
+<!--Footer-->
+<footer class="page-footer text-center font-small darken-2 mt-4 wow fadeIn" style="background-color: #2C3E50;">
+    <div class="footer-copyright py-3">
+        <p><b>Universidad de los Andes</b> © 2020 Copyright</p>
+    </div>
+</footer>
+<!--Footer-->
+</body>
+<script>
+    function EjecutarRF1() {
+        const vHoraInicio = $('#cmbHoraInicio').val();
+        const vHoraFin = $('#cmbHoraFin').val();
+
+        if (!vHoraInicio || !vHoraFin) {
+            alert('Los parámetros de entrada no son correctos.');
+            return;
+        }
+
+        const vJson = JSON.stringify({
+            "HoraInicio": vHoraInicio,
+            "HoraFin": vHoraFin
+        });
+        const vEncode = encodeURIComponent(vJson);
+        CargarRF1(true);
+        $.ajax({
+            url: '/EjecutarRF1/' + vEncode + '/',
+            dataType: 'JSON',
+            type: 'GET',
+            error: function (result) {
+                $('#taResultadoRF1').val(result.responseText);
+                CargarRF1(false);
+            }
+        });
+    }
+
+    function CargarRF1(pShow) {
+        if (pShow) {
+            $('#loadingRF1').show();
+            $('#btnEjecutarRF1').hide();
+            $('#cmbHoraInicio').prop('disabled', true);
+            $('#cmbHoraFin').prop('disabled', true);
+            $('#taResultadoRF1').val('');
+        } else {
+            $('#loadingRF1').hide();
+            $('#btnEjecutarRF1').show();
+            $('#cmbHoraInicio').prop('disabled', false);
+            $('#cmbHoraFin').prop('disabled', false);
+        }
+    }
+</script>
+</html>

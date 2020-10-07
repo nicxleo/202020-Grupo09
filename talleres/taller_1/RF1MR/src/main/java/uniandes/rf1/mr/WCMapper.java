@@ -6,13 +6,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.io.DoubleWritable;
+import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.log4j.Logger;
 
-public class WCMapper extends Mapper<LongWritable, Text, Text, DoubleWritable> {
+public class WCMapper extends Mapper<LongWritable, Text, Text, IntWritable> {
 
     @Override
     protected void map(LongWritable key, Text value, Mapper.Context context) throws IOException, InterruptedException {
@@ -35,7 +35,7 @@ public class WCMapper extends Mapper<LongWritable, Text, Text, DoubleWritable> {
             int hour = vCalendar.get(Calendar.HOUR_OF_DAY);
             
             if (hour >= pHoraDesde && hour <= pHoraHasta) {
-                context.write(new Text("Datos_" + vZonaDesde + "_" + index.Tipo), new DoubleWritable(1.0));
+                context.write(new Text("Datos_" + index.Tipo), new IntWritable(vZonaDesde));
             }
         } catch (Exception ex) {
         }

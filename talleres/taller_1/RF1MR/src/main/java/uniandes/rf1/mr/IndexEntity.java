@@ -5,6 +5,7 @@ package uniandes.rf1.mr;
  * @author Esteb
  */
 public class IndexEntity {
+
     public String Tipo;
     public int ZonaDesde;
     public int ZonaHasta;

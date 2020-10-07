@@ -7,6 +7,7 @@ import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.DoubleWritable;
+import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 
 /**
@@ -56,7 +57,7 @@ public class JobMR {
         //////////////////////
         wcJob.setMapperClass(WCMapper.class);
         wcJob.setMapOutputKeyClass(Text.class);
-        wcJob.setMapOutputValueClass(DoubleWritable.class);
+        wcJob.setMapOutputValueClass(IntWritable.class);
         ///////////////////////////
         //Reducer
         ///////////////////////////

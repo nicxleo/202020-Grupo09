@@ -22,7 +22,7 @@ public class WCMapper extends Mapper<LongWritable, Text, Text, DoubleWritable> {
         int pZonaDesde = Integer.parseInt(conf.get("ZonaDesde"));
         int pZonaHasta = Integer.parseInt(conf.get("ZonaHasta"));
         int pMes = Integer.parseInt(conf.get("Mes"));
-        //logger.info("TRAZA PERSONALIZADA."+pZonaDesde);
+        //logger.info("TRAZA PERSONALIZADA."+index.Tipo+"\t"+month+"\t"+vZonaDesde+"\t"+vZonaHasta);
         try {
             String[] vLstColumna = value.toString().split(",");
             IndexEntity index = Helper.GetIndex(vLstColumna);
@@ -30,11 +30,11 @@ public class WCMapper extends Mapper<LongWritable, Text, Text, DoubleWritable> {
             int vZonaHasta = Integer.parseInt(vLstColumna[index.ZonaHasta]);
             String vStringFechaDesde = vLstColumna[index.FechaDesde];
             Date vFechaDesde = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(vStringFechaDesde);
-
+            
             Calendar vCalendar = new GregorianCalendar();
             vCalendar.setTime(vFechaDesde);
             int month = vCalendar.get(Calendar.MONTH) + 1;
-
+            
             if (vZonaDesde == pZonaDesde && vZonaHasta == pZonaHasta && month == pMes) {
                 Double vMontoTotal = Double.parseDouble(vLstColumna[index.MontoTotal]);
                 context.write(new Text("Datos"), new DoubleWritable(vMontoTotal));

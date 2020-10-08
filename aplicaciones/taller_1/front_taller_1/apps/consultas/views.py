@@ -12,23 +12,52 @@ def Inicio(request):
     while count < 24:
         lstHora.append(count)
         count += 1
-    return render(request, 'views/inicio.html', context={'lstHora': lstHora})
+    return render(request, "views/inicio.html", context={"lstHora": lstHora})
 
 
 def EjecutarRF1(request, json):
-
     lstData = simplejson.loads(json)
-    objHoraInicio = lstData['HoraInicio']
-    objHoraFin = lstData['HoraFin']
+    objHoraInicio = lstData["HoraInicio"]
+    objHoraFin = lstData["HoraFin"]
+    objParams = "{0} {1}".format(objHoraInicio, objHoraFin)
+    return EjecutarReto(objParams, "config/rf1.txt")
 
-    if os.path.isfile('/home/bigdata09/nicolas/respuesta/part-r-00000'):
-        os.remove('/home/bigdata09/nicolas/respuesta/part-r-00000')
 
-    call('hadoop fs -rm -r /tmp/bigdata09/result_RF1', shell=True)
-    call('hadoop jar /home/bigdata09/nicolas/RF1MR-1.jar uniandes.rf1.mr.JobMR /tmp/bigdata09/datos /tmp/bigdata09/result_RF1 ' + objHoraInicio + ' ' + objHoraFin, shell=True)
-    call('hadoop fs -get /tmp/bigdata09/result_RF1/part-r-00000 /home/bigdata09/nicolas/respuesta/', shell=True)
+def EjecutarRF2(request, json):
+    lstData = simplejson.loads(json)
+    objZonaDesde = lstData["ZonaDesde"]
+    objZonaHasta = lstData["ZonaHasta"]
+    objMes = lstData["Mes"]
+    objParams = "{0} {1} {2}".format(objZonaDesde, objZonaHasta, objMes)
+    return EjecutarReto(objParams, "config/rf2.txt")
 
-    objArchivo = open('/home/bigdata09/nicolas/respuesta/part-r-00000', 'r')
-    objTexto = objArchivo.read()
 
-    return HttpResponse(objTexto)
+def EjecutarReto(objParams, objFileName):
+    try:
+        objDirName = os.path.dirname(os.path.realpath("__file__"))
+        objFileConfig = open(os.path.join(objDirName, objFileName), "r")
+        objConfig = objFileConfig.read().split("\n")
+
+        objResultFileName = objConfig[0]
+        objResultFilePath = objConfig[1]
+        objJarJobPath = objConfig[2]
+        objJarJobName = objConfig[3]
+        objHadoopSource = objConfig[4]
+        objHadoopTarget = objConfig[5]
+        objResultFile = os.path.join(objResultFilePath, objResultFileName)
+        objHadoopResultFile = os.path.join(objHadoopTarget, objResultFileName)
+
+        if os.path.isfile(objResultFile):
+            os.remove(objResultFile)
+
+        call("hadoop fs -rm -r {0}".format(objHadoopTarget), shell=True)
+        call("hadoop jar {0} {1} {2} {3} {4}".format(objJarJobPath, objJarJobName, objHadoopSource, objHadoopTarget,
+                                                     objParams), shell=True)
+        call("hadoop fs -get {0} {1}".format(objHadoopResultFile, objResultFilePath), shell=True)
+
+        objArchivo = open(objResultFile, "r")
+        objResult = objArchivo.read()
+    except OSError as err:
+        objResult = "OS error: {0}".format(err)
+
+    return HttpResponse(objResult)

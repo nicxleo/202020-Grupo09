@@ -37,17 +37,17 @@
                     <div class="card-body">
                         <nav>
                             <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                                <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home"
-                                   role="tab" aria-controls="nav-home" aria-selected="true">RF1</a>
-                                <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile"
-                                   role="tab" aria-controls="nav-profile" aria-selected="false">RF2</a>
+                                <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-rf1"
+                                   role="tab" aria-controls="nav-rf1" aria-selected="true">RF1</a>
+                                <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-rf2"
+                                   role="tab" aria-controls="nav-rf2" aria-selected="false">RF2</a>
                                 <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-contact"
                                    role="tab" aria-controls="nav-contact" aria-selected="false">RF3</a>
                             </div>
                         </nav>
                         <div class="tab-content" id="nav-tabContent">
-                            <div class="tab-pane fade show active" id="nav-home" role="tabpanel"
-                                 aria-labelledby="nav-home-tab">
+                            <div class="tab-pane fade show active" id="nav-rf1" role="tabpanel"
+                                 aria-labelledby="nav-rf1-tab">
                                 <div class="row" style="display: inline;"><br/></div>
                                 <div class="row">
                                     <div class="col-md-3"></div>
@@ -97,8 +97,67 @@
                                     <div class="col-md-2"></div>
                                 </div>
                             </div>
-                            <div class="tab-pane fade" id="nav-profile" role="tabpanel"
-                                 aria-labelledby="nav-profile-tab">...
+                            <div class="tab-pane fade" id="nav-rf2" role="tabpanel"
+                                 aria-labelledby="nav-rf2-tab">
+                                <div class="row" style="display: inline;"><br/></div>
+                                <div class="row">
+                                    <div class="col-md-1"></div>
+                                    <div class="col-md-3">
+                                        <input type="text" id="txtZonaDesde" class="form-control"
+                                               placeholder="Zona Desde" maxlength="10"
+                                               onkeypress="return SoloNumeros(event);">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <input type="text" id="txtZonaHasta" class="form-control"
+                                               placeholder="Zona Hasta" maxlength="10"
+                                               onkeypress="return SoloNumeros(event);">
+                                    </div>
+                                    <div class="col-md-4 text-center">
+                                        <select class="browser-default custom-select" id="cmbMes">
+                                            <option value="" selected>Seleccione el mes</option>
+                                            <option value="1">Enero</option>
+                                            <option value="2">Febrero</option>
+                                            <option value="3">Marzo</option>
+                                            <option value="4">Abril</option>
+                                            <option value="5">Mayo</option>
+                                            <option value="6">Junio</option>
+                                            <option value="7">Julio</option>
+                                            <option value="8">Agosto</option>
+                                            <option value="9">Septiembre</option>
+                                            <option value="10">Octubre</option>
+                                            <option value="11">Noviembre</option>
+                                            <option value="12">Diciembre</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-1"></div>
+                                </div>
+                                <div class="row" style="display: inline;"><br/></div>
+                                <div class="row">
+                                    <div class="col-md-4"></div>
+                                    <div class="col-md-4 text-center">
+                                        <button class="btn btn-md btn-mdb-color" type="button"
+                                                id="btnEjecutarRF2" onclick="EjecutarRF2();">
+                                            Ejecutar Reto
+                                        </button>
+                                        <div class="lds-ring hidden" aria-role="none" id="loadingRF2">
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4"></div>
+                                </div>
+                                <div class="row" style="display: inline;"><br/></div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-md-2"></div>
+                                    <div class="col-md-8 text-center">
+                                        <textarea class="form-control" id="taResultadoRF2" rows="7"></textarea>
+                                    </div>
+                                    <div class="col-md-2"></div>
+                                </div>
                             </div>
                             <div class="tab-pane fade" id="nav-contact" role="tabpanel"
                                  aria-labelledby="nav-contact-tab">...
@@ -147,6 +206,34 @@
         });
     }
 
+    function EjecutarRF2() {
+        const vZonaDesde = $('#txtZonaDesde').val();
+        const vZonaHasta = $('#txtZonaHasta').val();
+        const vMes = $('#cmbMes').val();
+
+        if (!vZonaDesde || !vZonaHasta || !vMes) {
+            alert('Los parámetros de entrada no son correctos.');
+            return;
+        }
+
+        const vJson = JSON.stringify({
+            "ZonaDesde": vZonaDesde,
+            "ZonaHasta": vZonaHasta,
+            "Mes": vMes,
+        });
+        const vEncode = encodeURIComponent(vJson);
+        CargarRF2(true);
+        $.ajax({
+            url: '/EjecutarRF2/' + vEncode + '/',
+            dataType: 'JSON',
+            type: 'GET',
+            error: function (result) {
+                $('#taResultadoRF2').val(result.responseText);
+                CargarRF2(false);
+            }
+        });
+    }
+
     function CargarRF1(pShow) {
         if (pShow) {
             $('#loadingRF1').show();
@@ -160,6 +247,27 @@
             $('#cmbHoraInicio').prop('disabled', false);
             $('#cmbHoraFin').prop('disabled', false);
         }
+    }
+
+    function CargarRF2(pShow) {
+        if (pShow) {
+            $('#loadingRF2').show();
+            $('#btnEjecutarRF2').hide();
+            $('#txtZonaDesde').prop('disabled', true);
+            $('#txtZonaHasta').prop('disabled', true);
+            $('#cmbMes').prop('disabled', true);
+            $('#taResultadoRF2').val('');
+        } else {
+            $('#loadingRF2').hide();
+            $('#btnEjecutarRF2').show();
+            $('#txtZonaDesde').prop('disabled', false);
+            $('#txtZonaHasta').prop('disabled', false);
+            $('#cmbMes').prop('disabled', false);
+        }
+    }
+
+    function SoloNumeros(e) {
+        return new RegExp("^[0-9]").test(e.key)
     }
 </script>
 </html>

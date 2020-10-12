@@ -1,0 +1,6 @@
+part-r-00000
+/home/bigdata09/resultados/RF3/
+/home/bigdata09/RF3MR-1.jar
+uniandes.rf3.mr.JobMR
+/datos/taxis/
+/tmp/bigdata09/result_RF3/

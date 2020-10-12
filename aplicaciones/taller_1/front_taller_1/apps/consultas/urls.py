@@ -6,5 +6,6 @@ urlpatterns = [
     path('', views.Inicio, name='Inicio'),
     path('EjecutarRF1/<json>/', views.EjecutarRF1, name='EjecutarRF1'),
     path('EjecutarRF2/<json>/', views.EjecutarRF2, name='EjecutarRF2'),
-    path('ConsultarRespuesta/<json>/', views.ConsultarRespuesta, name='ConsultarRespuesta'),
+    path('EjecutarRF3/<json>/', views.EjecutarRF3, name='EjecutarRF3'),
+    path('ConsultarRespuesta/<json>/', views.ConsultarRespuesta, name='ConsultarRespuesta')
 ]

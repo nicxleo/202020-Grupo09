@@ -29,6 +29,6 @@ public class WCReducer extends Reducer<Text, IntWritable, Text, DoubleWritable> 
 
         TripEntity max = Collections.max(items, Comparator.comparing(x -> x.Cantidad));
 
-        context.write(new Text(key + "_" + max.ZonaDesde), new DoubleWritable(max.Cantidad));
+        context.write(new Text(key + "\tZonaDesde " + max.ZonaDesde + "\tTotalViajes"), new DoubleWritable(max.Cantidad));
     }
 }

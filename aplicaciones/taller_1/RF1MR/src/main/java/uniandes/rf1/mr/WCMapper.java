@@ -35,7 +35,7 @@ public class WCMapper extends Mapper<LongWritable, Text, Text, IntWritable> {
             int hour = vCalendar.get(Calendar.HOUR_OF_DAY);
             
             if (hour >= pHoraDesde && hour <= pHoraHasta) {
-                context.write(new Text("Datos_" + index.Tipo), new IntWritable(vZonaDesde));
+                context.write(new Text("TipoVehiculo " + index.Tipo), new IntWritable(vZonaDesde));
             }
         } catch (Exception ex) {
         }

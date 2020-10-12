@@ -32,6 +32,15 @@ def EjecutarRF2(request, json):
     return EjecutarReto(objParams, "config/rf2.txt")
 
 
+def EjecutarRF3(request, json):
+    lstData = simplejson.loads(json)
+    objHoraInicio = lstData["HoraInicio"]
+    objHoraFin = lstData["HoraFin"]
+    objZonaHasta = lstData["ZonaHasta"]
+    objParams = "{0} {1} {2}".format(objHoraInicio, objHoraFin, objZonaHasta)
+    return EjecutarReto(objParams, "config/rf3.txt")
+
+
 def ConsultarRespuesta(request, json):
     try:
         lstData = simplejson.loads(json)
@@ -74,7 +83,7 @@ def EjecutarReto(objParams, objFileName):
             os.remove(objResultFile)
 
         call("hadoop fs -rm -r {0}".format(objHadoopTarget), shell=True)
-        Popen("hadoop jar {0} {1} {2} {3} {4}".format(objJarJobPath, objJarJobName, objHadoopSource, objHadoopTarget, objParams), shell=True)
+        Popen("hadoop jar {0} {1} {2} {3} {4}".format(objJarJobPath, objJarJobName, objHadoopSource, objHadoopTarget,                                                      objParams), shell=True)
 
         objResult = "OK"
     except OSError as err:

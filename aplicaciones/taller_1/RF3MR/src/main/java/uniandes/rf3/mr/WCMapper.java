@@ -37,7 +37,7 @@ public class WCMapper extends Mapper<LongWritable, Text, Text, IntWritable> {
             int month = vCalendar.get(Calendar.MONTH) + 1;
             
             if (hour >= pHoraDesde && hour <= pHoraHasta && vZonaHasta == pZonaHasta) {
-                context.write(new Text("Datos_" + month), new IntWritable(vZonaHasta));
+                context.write(new Text("Mes " + month), new IntWritable(vZonaHasta));
             }
         } catch (Exception ex) {
         }

@@ -2,5 +2,5 @@ part-r-00000
 /home/bigdata09/resultados/RF2/
 /home/bigdata09/RF2MR-1.jar
 uniandes.rf2.mr.JobMR
-/tmp/bigdata09/datos/
+/datos/taxis/
 /tmp/bigdata09/result_RF2/

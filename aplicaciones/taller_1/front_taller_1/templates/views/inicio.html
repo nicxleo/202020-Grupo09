@@ -37,12 +37,12 @@
                     <div class="card-body">
                         <nav>
                             <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                                <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-rf1"
+                                <a class="nav-item nav-link active" id="nav-rf1-tab" data-toggle="tab" href="#nav-rf1"
                                    role="tab" aria-controls="nav-rf1" aria-selected="true">RF1</a>
-                                <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-rf2"
+                                <a class="nav-item nav-link" id="nav-rf2-tab" data-toggle="tab" href="#nav-rf2"
                                    role="tab" aria-controls="nav-rf2" aria-selected="false">RF2</a>
-                                <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-contact"
-                                   role="tab" aria-controls="nav-contact" aria-selected="false">RF3</a>
+                                <a class="nav-item nav-link" id="nav-rf3-tab" data-toggle="tab" href="#nav-rf3"
+                                   role="tab" aria-controls="nav-rf3" aria-selected="false">RF3</a>
                             </div>
                         </nav>
                         <div class="tab-content" id="nav-tabContent">
@@ -159,8 +159,61 @@
                                     <div class="col-md-2"></div>
                                 </div>
                             </div>
-                            <div class="tab-pane fade" id="nav-contact" role="tabpanel"
-                                 aria-labelledby="nav-contact-tab">...
+                            <div class="tab-pane fade" id="nav-rf3" role="tabpanel"
+                                 aria-labelledby="nav-rf3-tab">
+                                <div class="row" style="display: inline;"><br/></div>
+                                <div class="row">
+                                    <div class="col-md-1"></div>
+                                    <div class="col-md-3 text-center">
+                                        <select class="browser-default custom-select" id="cmbHoraInicioRF3">
+                                            <option value="" selected>Seleccione la hora inicial</option>
+                                            {% for hora in lstHora %}
+                                                <option value="{{ hora }}">{{ hora }}:00</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3 text-center">
+                                        <select class="browser-default custom-select" id="cmbHoraFinRF3">
+                                            <option value="" selected>Seleccione la hora final</option>
+                                            {% for hora in lstHora %}
+                                                <option value="{{ hora }}">{{ hora }}:00</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="text" id="txtZonaHastaRF3" class="form-control"
+                                               placeholder="Zona Hasta" maxlength="10"
+                                               onkeypress="return SoloNumeros(event);">
+                                    </div>
+                                    <div class="col-md-1"></div>
+                                </div>
+                                <div class="row" style="display: inline;"><br/></div>
+                                <div class="row">
+                                    <div class="col-md-4"></div>
+                                    <div class="col-md-4 text-center">
+                                        <button class="btn btn-md btn-mdb-color" type="button"
+                                                id="btnEjecutarRF3" onclick="EjecutarRF3();">
+                                            Ejecutar Reto
+                                        </button>
+                                        <div class="lds-ring hidden" aria-role="none" id="loadingRF3">
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4"></div>
+                                </div>
+                                <div class="row" style="display: inline;"><br/></div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-md-2"></div>
+                                    <div class="col-md-8 text-center">
+                                        <textarea class="form-control" id="taResultadoRF3" rows="7"></textarea>
+                                    </div>
+                                    <div class="col-md-2"></div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -242,6 +295,38 @@
         });
     }
 
+    function EjecutarRF3() {
+        const vHoraInicio = $('#cmbHoraInicioRF3').val();
+        const vHoraFin = $('#cmbHoraFinRF3').val();
+        const vZonaHasta = $('#txtZonaHastaRF3').val();
+
+        if (!vHoraInicio || !vHoraFin || !vZonaHasta) {
+            alert('Los parámetros de entrada no son correctos.');
+            return;
+        }
+
+        const vJson = JSON.stringify({
+            "HoraInicio": vHoraInicio,
+            "HoraFin": vHoraFin,
+            "ZonaHasta": vZonaHasta,
+        });
+        const vEncode = encodeURIComponent(vJson);
+        CargarRF3(true);
+        $.ajax({
+            url: '/EjecutarRF3/' + vEncode + '/',
+            dataType: 'JSON',
+            type: 'GET',
+            error: function (result) {
+                if (result.responseText === 'OK') {
+                    setTimeout(ConsultarRespuesta, 5000, 'config-rf3.txt');
+                } else {
+                    $('#taResultadoRF3').val(result.responseText);
+                    CargarRF3(false);
+                }
+            }
+        });
+    }
+
     function ConsultarRespuesta(pFileName) {
         const vJson = JSON.stringify({
             "FileName": pFileName
@@ -261,8 +346,11 @@
                         $('#taResultadoRF2').val(result.responseText);
                         CargarRF2(false);
                     }
-                }
-                else {
+                    if (pFileName === 'config-rf3.txt') {
+                        $('#taResultadoRF3').val(result.responseText);
+                        CargarRF3(false);
+                    }
+                } else {
                     setTimeout(ConsultarRespuesta, 5000, pFileName);
                 }
             }
@@ -298,6 +386,23 @@
             $('#txtZonaDesde').prop('disabled', false);
             $('#txtZonaHasta').prop('disabled', false);
             $('#cmbMes').prop('disabled', false);
+        }
+    }
+
+    function CargarRF3(pShow) {
+        if (pShow) {
+            $('#loadingRF3').show();
+            $('#btnEjecutarRF3').hide();
+            $('#cmbHoraInicioRF3').prop('disabled', true);
+            $('#cmbHoraFinRF3').prop('disabled', true);
+            $('#txtZonaHastaRF3').prop('disabled', true);
+            $('#taResultadoRF3').val('');
+        } else {
+            $('#loadingRF3').hide();
+            $('#btnEjecutarRF3').show();
+            $('#cmbHoraInicioRF3').prop('disabled', false);
+            $('#cmbHoraFinRF3').prop('disabled', false);
+            $('#txtZonaHastaRF3').prop('disabled', false);
         }
     }
 

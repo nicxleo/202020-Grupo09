@@ -1,0 +1,7 @@
+part-r-00000
+/home/bigdata09/resultados/RA2/
+/home/bigdata09/RA2MR-1.jar
+uniandes.ra2.mr.JobMR
+/datos/taxis/
+/tmp/bigdata09/result_RA2/
+/home/estudiante/resultados/RA2/

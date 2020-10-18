@@ -4,3 +4,4 @@ part-r-00000
 uniandes.rf1.mr.JobMR
 /datos/taxis/
 /tmp/bigdata09/result_RF1/
+/home/estudiante/resultados/RF1/

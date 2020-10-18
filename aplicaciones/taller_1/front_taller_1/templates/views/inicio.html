@@ -43,6 +43,8 @@
                                    role="tab" aria-controls="nav-rf2" aria-selected="false">RF2</a>
                                 <a class="nav-item nav-link" id="nav-rf3-tab" data-toggle="tab" href="#nav-rf3"
                                    role="tab" aria-controls="nav-rf3" aria-selected="false">RF3</a>
+                                <a class="nav-item nav-link" id="nav-ra2-tab" data-toggle="tab" href="#nav-ra2"
+                                   role="tab" aria-controls="nav-ra2" aria-selected="false">RA2</a>
                             </div>
                         </nav>
                         <div class="tab-content" id="nav-tabContent">
@@ -215,6 +217,36 @@
                                     <div class="col-md-2"></div>
                                 </div>
                             </div>
+                            <div class="tab-pane fade" id="nav-ra2" role="tabpanel"
+                                 aria-labelledby="nav-ra2-tab">
+                                <div class="row" style="display: inline;"><br/></div>
+                                <div class="row">
+                                    <div class="col-md-4"></div>
+                                    <div class="col-md-4 text-center">
+                                        <button class="btn btn-md btn-mdb-color" type="button"
+                                                id="btnEjecutarRA2" onclick="EjecutarRA2();">
+                                            Ejecutar Reto
+                                        </button>
+                                        <div class="lds-ring hidden" aria-role="none" id="loadingRA2">
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4"></div>
+                                </div>
+                                <div class="row" style="display: inline;"><br/></div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-md-2"></div>
+                                    <div class="col-md-8 text-center">
+                                        <textarea class="form-control" id="taResultadoRA2" rows="7"></textarea>
+                                    </div>
+                                    <div class="col-md-2"></div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -228,6 +260,8 @@
 <footer class="page-footer text-center font-small darken-2 mt-4 wow fadeIn" style="background-color: #2C3E50;">
     <div class="footer-copyright py-3">
         <p><b>Universidad de los Andes</b> © 2020 Copyright</p>
+        <p>Grupo 09</p>
+        <p>en.jimenez</p>
     </div>
 </footer>
 <!--Footer-->
@@ -252,6 +286,14 @@
             url: '/EjecutarRF1/' + vEncode + '/',
             dataType: 'JSON',
             type: 'GET',
+            success: function (result) {
+                if (result === 'OK') {
+                    setTimeout(ConsultarRespuesta, 5000, 'config-rf1.txt');
+                } else {
+                    $('#taResultadoRF1').val(result);
+                    CargarRF1(false);
+                }
+            },
             error: function (result) {
                 if (result.responseText === 'OK') {
                     setTimeout(ConsultarRespuesta, 5000, 'config-rf1.txt');
@@ -284,6 +326,14 @@
             url: '/EjecutarRF2/' + vEncode + '/',
             dataType: 'JSON',
             type: 'GET',
+            success: function (result) {
+                if (result === 'OK') {
+                    setTimeout(ConsultarRespuesta, 5000, 'config-rf2.txt');
+                } else {
+                    $('#taResultadoRF2').val(result);
+                    CargarRF2(false);
+                }
+            },
             error: function (result) {
                 if (result.responseText === 'OK') {
                     setTimeout(ConsultarRespuesta, 5000, 'config-rf2.txt');
@@ -316,12 +366,44 @@
             url: '/EjecutarRF3/' + vEncode + '/',
             dataType: 'JSON',
             type: 'GET',
+            success: function (result) {
+                if (result === 'OK') {
+                    setTimeout(ConsultarRespuesta, 5000, 'config-rf3.txt');
+                } else {
+                    $('#taResultadoRF3').val(result);
+                    CargarRF3(false);
+                }
+            },
             error: function (result) {
                 if (result.responseText === 'OK') {
                     setTimeout(ConsultarRespuesta, 5000, 'config-rf3.txt');
                 } else {
                     $('#taResultadoRF3').val(result.responseText);
                     CargarRF3(false);
+                }
+            }
+        });
+    }
+
+    function EjecutarRA2() {
+        CargarRA2(true);
+        $.ajax({
+            url: '/EjecutarRA2/',
+            type: 'GET',
+            success: function (result) {
+                if (result === 'OK') {
+                    setTimeout(ConsultarRespuesta, 5000, 'config-ra2.txt');
+                } else {
+                    $('#taResultadoRA2').val(result);
+                    CargarRA2(false);
+                }
+            },
+            error: function (result) {
+                if (result.responseText === 'OK') {
+                    setTimeout(ConsultarRespuesta, 5000, 'config-ra2.txt');
+                } else {
+                    $('#taResultadoRA2').val(result.responseText);
+                    CargarRA2(false);
                 }
             }
         });
@@ -349,6 +431,10 @@
                     if (pFileName === 'config-rf3.txt') {
                         $('#taResultadoRF3').val(result.responseText);
                         CargarRF3(false);
+                    }
+                    if (pFileName === 'config-ra2.txt') {
+                        $('#taResultadoRA2').val(result.responseText);
+                        CargarRA2(false);
                     }
                 } else {
                     setTimeout(ConsultarRespuesta, 5000, pFileName);
@@ -403,6 +489,17 @@
             $('#cmbHoraInicioRF3').prop('disabled', false);
             $('#cmbHoraFinRF3').prop('disabled', false);
             $('#txtZonaHastaRF3').prop('disabled', false);
+        }
+    }
+
+    function CargarRA2(pShow) {
+        if (pShow) {
+            $('#loadingRA2').show();
+            $('#btnEjecutarRA2').hide();
+            $('#taResultadoRA2').val('');
+        } else {
+            $('#loadingRA2').hide();
+            $('#taResultadoRA2').show();
         }
     }
 

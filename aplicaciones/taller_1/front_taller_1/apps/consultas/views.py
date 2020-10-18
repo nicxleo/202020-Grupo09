@@ -1,6 +1,7 @@
 import os
-from subprocess import call, Popen
+from http.client import HTTPConnection
 
+import paramiko
 import simplejson
 from django.http import HttpResponse
 from django.shortcuts import render
@@ -41,6 +42,10 @@ def EjecutarRF3(request, json):
     return EjecutarReto(objParams, "config/rf3.txt")
 
 
+def EjecutarRA2(request):
+    return EjecutarReto("", "config/ra2.txt")
+
+
 def ConsultarRespuesta(request, json):
     try:
         lstData = simplejson.loads(json)
@@ -54,14 +59,19 @@ def ConsultarRespuesta(request, json):
         objResultFileName = objConfig[0]
         objResultFilePath = objConfig[1]
         objHadoopTarget = objConfig[5]
+        objLocalFilePath = objConfig[6]
         objResultFile = os.path.join(objResultFilePath, objResultFileName)
+        objLocalFile = os.path.join(objLocalFilePath, objResultFileName)
         objHadoopResultFile = os.path.join(objHadoopTarget, objResultFileName)
 
-        call("hadoop fs -get {0} {1}".format(objHadoopResultFile, objResultFilePath), shell=True)
-        objArchivo = open(objResultFile, "r")
+        RunCmd("hadoop fs -get {0} {1}".format(objHadoopResultFile, objResultFilePath))
+        DownloadFile(objResultFile, objLocalFile)
+
+        objArchivo = open(objLocalFile, "r")
         objResult = objArchivo.read()
-    except OSError:
+    except OSError as err:
         objResult = "IN_PROCESS"
+        # objResult = "OS error: {0}".format(err)
     return HttpResponse(objResult)
 
 
@@ -77,16 +87,72 @@ def EjecutarReto(objParams, objFileName):
         objJarJobName = objConfig[3]
         objHadoopSource = objConfig[4]
         objHadoopTarget = objConfig[5]
+        objLocalFilePath = objConfig[6]
         objResultFile = os.path.join(objResultFilePath, objResultFileName)
+        objLocalFile = os.path.join(objLocalFilePath, objResultFileName)
 
-        if os.path.isfile(objResultFile):
-            os.remove(objResultFile)
+        if not os.path.isdir(objLocalFilePath):
+            os.mkdir(objLocalFilePath)
 
-        call("hadoop fs -rm -r {0}".format(objHadoopTarget), shell=True)
-        Popen("hadoop jar {0} {1} {2} {3} {4}".format(objJarJobPath, objJarJobName, objHadoopSource, objHadoopTarget,                                                      objParams), shell=True)
+        if os.path.isfile(objLocalFile):
+            os.remove(objLocalFile)
+
+        RunCmd("mkdir -p {0}".format(objResultFilePath))
+        RunCmd("rm {0}".format(objResultFile))
+        RunCmd("hadoop fs -rm -r {0}".format(objHadoopTarget))
+        RunCmd("hadoop jar {0} {1} {2} {3} {4}".format(
+            objJarJobPath,
+            objJarJobName,
+            objHadoopSource,
+            objHadoopTarget,
+            objParams))
 
         objResult = "OK"
     except OSError as err:
         objResult = "OS error: {0}".format(err)
 
     return HttpResponse(objResult)
+
+
+def RunCmd(objCommand):
+    host_proxy = "connect2.virtual.uniandes.edu.co"
+    port_proxy = 443
+    host_server = "bigdata-cluster1-ambari.virtual.uniandes.edu.co"
+    port_server = 22
+    user_server = "bigdata09"
+    pass_server = "Rojo2020"
+
+    http_con = HTTPConnection(host_proxy, port_proxy)
+    http_con.set_tunnel(host_server, port_server)
+    http_con.connect()
+    sock = http_con.sock
+    ssh = paramiko.SSHClient()
+    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    ssh.connect(hostname=host_server, username=user_server, password=pass_server, sock=sock)
+    ssh.exec_command(objCommand)
+
+    ssh.close()
+    http_con.close()
+
+
+def DownloadFile(objRemoteFile, objLocalFile):
+    host_proxy = "connect2.virtual.uniandes.edu.co"
+    port_proxy = 443
+    host_server = "bigdata-cluster1-ambari.virtual.uniandes.edu.co"
+    port_server = 22
+    user_server = "bigdata09"
+    pass_server = "Rojo2020"
+
+    http_con = HTTPConnection(host_proxy, port_proxy)
+    http_con.set_tunnel(host_server, port_server)
+    http_con.connect()
+    sock = http_con.sock
+    ssh = paramiko.SSHClient()
+    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    ssh.connect(hostname=host_server, username=user_server, password=pass_server, sock=sock)
+    sftp = ssh.open_sftp()
+    sftp.get(objRemoteFile, objLocalFile)
+
+    sftp.close()
+    ssh.close()
+    http_con.close()

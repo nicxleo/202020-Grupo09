@@ -1,3 +1,5 @@
-from django.db import models
-
-# Create your models here.
+class Author():
+    def __init__(self, id, name, username):
+        self.id = id
+        self.name = name
+        self.username = username

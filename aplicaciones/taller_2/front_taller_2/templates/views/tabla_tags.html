@@ -1,0 +1,18 @@
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th scope="col">Tweet Id</th>
+        <th scope="col">Word</th>
+        <th scope="col">Tag</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for objTag in lstTag %}
+        <tr>
+            <td>{{ objTag.tweet_id }}</td>
+            <td>{{ objTag.word }}</td>
+            <td>{{ objTag.tag }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

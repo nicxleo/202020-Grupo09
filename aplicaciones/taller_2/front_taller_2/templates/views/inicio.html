@@ -7,8 +7,11 @@
     <link rel="stylesheet" href="{% static "lib/bootstrap/css/bootstrap.min.css" %}">
     <link rel="stylesheet" href="{% static "lib/mdb/css/mdb.min.css" %}">
     <link rel="stylesheet" href="{% static "lib/mdb/css/style.css" %}">
+    <link rel="stylesheet" href="{% static "lib/chart/css/Chart.css" %}">
+    <link rel="stylesheet" href="{% static "lib/report/css/report.css" %}">
     <script src="{% static "lib/jquery/js/jquery-3.4.1.min.js" %}"></script>
     <script src="{% static "lib/bootstrap/js/bootstrap.min.js" %}"></script>
+    <script src="{% static "lib/chart/js/Chart.js" %}"></script>
     <title>Taller 1 – Procesamiento escalable</title>
 </head>
 <body class="grey lighten-3">
@@ -35,7 +38,57 @@
             <div class="col-md-12 mb-4">
                 <div class="card">
                     <div class="card-body">
-
+                        <div class="row" style="display: inline;"><br/></div>
+                        <div class="row">
+                            <div class="col-md-1"></div>
+                            <div class="col-md-4 text-center">
+                                <select class="browser-default custom-select" id="cmbAuthor">
+                                    <option value="0" selected>Todos</option>
+                                    {% for objAuthor in lstAuthor %}
+                                        <option value="{{ objAuthor.id }}">{{ objAuthor.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-2"></div>
+                            <div class="col-md-4 text-center">
+                                <button type="button" class="btn btn-info" onclick="EjecutarAnalisis();">
+                                    Obtener Resultados
+                                </button>
+                            </div>
+                            <div class="col-md-1"></div>
+                        </div>
+                        <div class="row" style="display: inline;"><br/></div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div id="divResumenTweet"></div>
+                            </div>
+                            <div class="col-md-2"></div>
+                            <div class="col-md-6">
+                                <canvas id="chartSubjectivity"></canvas>
+                            </div>
+                        </div>
+                        <div class="row" style="display: inline;"><br/></div>
+                        <div class="row">
+                            <!--<div class="col-md-3">
+                                <div id="divTablaTag"></div>
+                            </div>-->
+                            <div class="col-md-6">
+                                <canvas id="chartScale"></canvas>
+                            </div>
+                            <div class="col-md-6">
+                                <canvas id="chartTag"></canvas>
+                            </div>
+                        </div>
+                        <div class="row" style="display: inline;"><br/></div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div id="divResumenWord"></div>
+                            </div>
+                            <div class="col-md-2"></div>
+                            <div class="col-md-6">
+                                <canvas id="chartDate"></canvas>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -55,42 +108,278 @@
 <!--Footer-->
 </body>
 <script>
-    function EjecutarRF1() {
-        const vHoraInicio = $('#cmbHoraInicio').val();
-        const vHoraFin = $('#cmbHoraFin').val();
+    let chartScale;
+    let chartTag;
+    let chartSubjectivity;
+    let chartDate;
 
-        if (!vHoraInicio || !vHoraFin) {
-            alert('Los parámetros de entrada no son correctos.');
-            return;
-        }
+    $(document).ready(function () {
 
+    });
+
+    function EjecutarAnalisis() {
+        //TablaTag()
+        ResumenTweet();
+        ResumenWord();
+        CountScale();
+        CountTag();
+        CountSubjectivity();
+        CountDate();
+    }
+
+    function TablaTag() {
+        const vAuthor = $('#cmbAuthor').val();
         const vJson = JSON.stringify({
-            "HoraInicio": vHoraInicio,
-            "HoraFin": vHoraFin
+            "Author": vAuthor
         });
         const vEncode = encodeURIComponent(vJson);
-        CargarRF1(true);
         $.ajax({
-            url: '/EjecutarRF1/' + vEncode + '/',
+            url: '/TablaTag/' + vEncode + '/',
             dataType: 'JSON',
             type: 'GET',
-            success: function (result) {
-                if (result === 'OK') {
-                    setTimeout(ConsultarRespuesta, 5000, 'config-rf1.txt');
-                } else {
-                    $('#taResultadoRF1').val(result);
-                    CargarRF1(false);
-                }
-            },
             error: function (result) {
-                if (result.responseText === 'OK') {
-                    setTimeout(ConsultarRespuesta, 5000, 'config-rf1.txt');
-                } else {
-                    $('#taResultadoRF1').val(result.responseText);
-                    CargarRF1(false);
-                }
+                $("#divTablaTag").html(result.responseText)
             }
         });
+    }
+
+    function ResumenTweet() {
+        const vAuthor = $('#cmbAuthor').val();
+        const vJson = JSON.stringify({
+            "Author": vAuthor
+        });
+        const vEncode = encodeURIComponent(vJson);
+        $.ajax({
+            url: '/ResumenTweet/' + vEncode + '/',
+            dataType: 'JSON',
+            type: 'GET',
+            error: function (result) {
+                $("#divResumenTweet").html(result.responseText)
+            }
+        });
+    }
+
+    function ResumenWord() {
+        const vAuthor = $('#cmbAuthor').val();
+        const vJson = JSON.stringify({
+            "Author": vAuthor
+        });
+        const vEncode = encodeURIComponent(vJson);
+        $.ajax({
+            url: '/ResumenWord/' + vEncode + '/',
+            dataType: 'JSON',
+            type: 'GET',
+            error: function (result) {
+                $("#divResumenWord").html(result.responseText)
+            }
+        });
+    }
+
+    function CountScale() {
+        const vAuthor = $('#cmbAuthor').val();
+        const vJson = JSON.stringify({
+            "Author": vAuthor
+        });
+        const vEncode = encodeURIComponent(vJson);
+        $.ajax({
+            url: '/CountScale/' + vEncode + '/',
+            dataType: 'JSON',
+            type: 'GET',
+            error: function (result) {
+                const result_json = "[" + result.responseText.replace(/}{/g, "},{").replace(/None/g, "'Sin Especificar'").replace(/'/g, "\"") + "]";
+                const result_obj = JSON.parse(result_json);
+
+                let dataset = [];
+                let labels = [];
+                result_obj.forEach(x => {
+                    dataset.push(x.value);
+                    labels.push(x._id);
+                });
+
+                const backgroundColor = getBackgroundColor(6);
+                const data = {
+                    datasets: [{
+                        data: dataset,
+                        backgroundColor: backgroundColor,
+                    }],
+                    labels: labels
+                };
+                const ctx = document.getElementById('chartScale').getContext('2d');
+                if (chartScale) {
+                    chartScale.clear();
+                    chartScale.destroy();
+                }
+                chartScale = new Chart(ctx, {
+                    type: 'pie',
+                    data: data,
+                    options: {}
+                });
+            }
+        });
+    }
+
+    function CountTag() {
+        const vAuthor = $('#cmbAuthor').val();
+        const vJson = JSON.stringify({
+            "Author": vAuthor
+        });
+        const vEncode = encodeURIComponent(vJson);
+        $.ajax({
+            url: '/CountTag/' + vEncode + '/',
+            dataType: 'JSON',
+            type: 'GET',
+            error: function (result) {
+                const result_json = "[" + result.responseText.replace(/}{/g, "},{").replace(/None/g, "'Sin Especificar'").replace(/'/g, "\"") + "]";
+                const result_obj = JSON.parse(result_json);
+
+                let dataset = [];
+                let labels = [];
+                result_obj.forEach(x => {
+                    dataset.push(x.value);
+                    labels.push(x._id);
+                });
+
+                const backgroundColor = getBackgroundColor(25);
+                const data = {
+                    datasets: [{
+                        label: '# Tags por Tweets',
+                        data: dataset,
+                        backgroundColor: backgroundColor,
+                    }],
+                    labels: labels
+                };
+                const ctx = document.getElementById('chartTag').getContext('2d');
+                if (chartTag) {
+                    chartTag.clear();
+                    chartTag.destroy();
+                }
+                chartTag = new Chart(ctx, {
+                    type: 'bar',
+                    data: data,
+                    options: {}
+                });
+            }
+        });
+    }
+
+    function CountSubjectivity() {
+        const vAuthor = $('#cmbAuthor').val();
+        const vJson = JSON.stringify({
+            "Author": vAuthor
+        });
+        const vEncode = encodeURIComponent(vJson);
+        $.ajax({
+            url: '/CountSubjectivity/' + vEncode + '/',
+            dataType: 'JSON',
+            type: 'GET',
+            error: function (result) {
+                const result_json = "[" + result.responseText.replace(/}{/g, "},{").replace(/None/g, "'Sin Especificar'").replace(/'/g, "\"") + "]";
+                const result_obj = JSON.parse(result_json);
+
+                let dataset = [];
+                let labels = [];
+                result_obj.forEach(x => {
+                    dataset.push(x.value);
+                    labels.push(parseFloat(x._id).toFixed(2));
+                });
+
+                const backgroundColor = getBackgroundColor(1);
+                const data = {
+                    datasets: [{
+                        label: '% de Subjetividad',
+                        data: dataset,
+                        backgroundColor: backgroundColor,
+                    }],
+                    labels: labels
+                };
+                const ctx = document.getElementById('chartSubjectivity').getContext('2d');
+                if (chartSubjectivity) {
+                    chartSubjectivity.clear();
+                    chartSubjectivity.destroy();
+                }
+                chartSubjectivity = new Chart(ctx, {
+                    type: 'line',
+                    data: data,
+                    options: {
+                        scales: {
+                            yAxes: [{
+                                stacked: true
+                            }]
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    function CountDate() {
+        const vAuthor = $('#cmbAuthor').val();
+        const vJson = JSON.stringify({
+            "Author": vAuthor
+        });
+        const vEncode = encodeURIComponent(vJson);
+        $.ajax({
+            url: '/CountDate/' + vEncode + '/',
+            dataType: 'JSON',
+            type: 'GET',
+            error: function (result) {
+                const result_json = "[" + result.responseText.replace(/}{/g, "},{").replace(/None/g, "'Sin Especificar'").replace(/'/g, "\"") + "]";
+                const result_obj = JSON.parse(result_json);
+
+                let dataset = [];
+                let labels = [];
+                result_obj.forEach(x => {
+                    dataset.push(x.value);
+                    labels.push(x._id);
+                });
+
+                const backgroundColor = getBackgroundColor(1);
+                const data = {
+                    datasets: [{
+                        label: '# Tweets por Fecha',
+                        data: dataset,
+                        backgroundColor: backgroundColor,
+                    }],
+                    labels: labels
+                };
+                const ctx = document.getElementById('chartDate').getContext('2d');
+                if (chartDate) {
+                    chartDate.clear();
+                    chartDate.destroy();
+                }
+                chartDate = new Chart(ctx, {
+                    type: 'line',
+                    data: data,
+                    options: {
+                        scales: {
+                            yAxes: [{
+                                stacked: true
+                            }]
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    function getBackgroundColor(count) {
+        let backgroundColor = [];
+        for (let i = 1; i <= count; i++) {
+            backgroundColor.push(getRandomColor())
+        }
+        return backgroundColor;
+    }
+
+    function getRandomColor() {
+        const r = getRandomInt(50, 200);
+        const g = getRandomInt(50, 200);
+        const b = getRandomInt(50, 200);
+        const color = `rgba(${r}, ${g}, ${b}, 0.7)`;
+        return color;
+    }
+
+    function getRandomInt(min, max) {
+        return Math.floor(Math.random() * (max - min)) + min;
     }
 
     function SoloNumeros(e) {

@@ -6,7 +6,7 @@ from django.shortcuts import render
 
 MONGODB_HOST = 'localhost'
 MONGODB_PORT = '27017'
-MONGODB_TIMEOUT = 1000
+MONGODB_TIMEOUT = 10000
 URI_CONNECTION = "mongodb://" + MONGODB_HOST + ":" + MONGODB_PORT + "/"
 
 
@@ -179,5 +179,45 @@ def CountDate(request, json):
     """)
     tweets.map_reduce(mapper, reducer, "result_date")
     result = db.result_date.find().sort("_id")
+    client.close()
+    return HttpResponse(result)
+
+
+def CountRetweeted(request, json):
+    lstData = simplejson.loads(json)
+    objAuthor = lstData["Author"]
+    client = pymongo.MongoClient(URI_CONNECTION, serverSelectionTimeoutMS=MONGODB_TIMEOUT)
+    db = client["Grupo09"]
+    tweets = db["tweets"]
+
+    mapper = Code("""
+        function () {
+            if (this.referenced_tweets && this.referenced_tweets.length > 0) {
+                emit(this.referenced_tweets[0].type, 1);
+            } else {
+                emit('regular', 1);
+            }
+        }
+    """)
+    if objAuthor != "0":
+        mapper = Code("""
+            function () {
+                if (this.author_id == % s) {
+                    if (this.referenced_tweets && this.referenced_tweets.length > 0) {
+                        emit(this.referenced_tweets[0].type, 1);
+                    } else {
+                        emit('regular', 1);
+                    }
+                }
+            }
+        """ % objAuthor)
+
+    reducer = Code("""
+        function (key, values) {
+            return Array.sum(values);
+        }
+    """)
+    tweets.map_reduce(mapper, reducer, "result_retweeted")
+    result = db.result_retweeted.find().sort("_id")
     client.close()
     return HttpResponse(result)

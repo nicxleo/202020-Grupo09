@@ -9,6 +9,7 @@ urlpatterns = [
     path('CountTag/<json>/', views.CountTag, name='CountTag'),
     path('CountSubjectivity/<json>/', views.CountSubjectivity, name='CountSubjectivity'),
     path('CountDate/<json>/', views.CountDate, name='CountDate'),
+    path('CountRetweeted/<json>/', views.CountRetweeted, name='CountRetweeted'),
     path('ResumenTweet/<json>/', views.ResumenTweet, name='ResumenTweet'),
     path('ResumenWord/<json>/', views.ResumenWord, name='ResumenWord'),
 ]

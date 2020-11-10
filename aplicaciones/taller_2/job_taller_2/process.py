@@ -4,7 +4,7 @@ from textblob import TextBlob
 
 MONGODB_HOST = "localhost"
 MONGODB_PORT = "27017"
-MONGODB_TIMEOUT = 1000
+MONGODB_TIMEOUT = 10000
 URI_CONNECTION = "mongodb://" + MONGODB_HOST + ":" + MONGODB_PORT + "/"
 
 
@@ -22,6 +22,7 @@ db = client["Grupo09"]
 tweets = db["tweets"]
 tags = db["tags"]
 
+# lstTweet = tweets.find()
 # lstTweet = tweets.find(limit=100)
 lstTweet = tweets.find({"subjectivity": None}, limit=100)
 

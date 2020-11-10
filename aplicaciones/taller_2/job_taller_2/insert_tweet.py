@@ -5,7 +5,7 @@ import pymongo
 
 MONGODB_HOST = "localhost"
 MONGODB_PORT = "27017"
-MONGODB_TIMEOUT = 1000
+MONGODB_TIMEOUT = 10000
 URI_CONNECTION = "mongodb://" + MONGODB_HOST + ":" + MONGODB_PORT + "/"
 
 client = pymongo.MongoClient(URI_CONNECTION, retryWrites=False, serverSelectionTimeoutMS=MONGODB_TIMEOUT)

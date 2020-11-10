@@ -86,6 +86,12 @@
                             </div>
                             <div class="col-md-2"></div>
                             <div class="col-md-6">
+                                <canvas id="chartRetweeted"></canvas>
+                            </div>
+                        </div>
+                        <div class="row" style="display: inline;"><br/></div>
+                        <div class="row">
+                            <div class="col-md-12">
                                 <canvas id="chartDate"></canvas>
                             </div>
                         </div>
@@ -112,6 +118,7 @@
     let chartTag;
     let chartSubjectivity;
     let chartDate;
+    let chartRetweeted;
 
     $(document).ready(function () {
 
@@ -125,6 +132,7 @@
         CountTag();
         CountSubjectivity();
         CountDate();
+        CountRetweeted();
     }
 
     function TablaTag() {
@@ -357,6 +365,49 @@
                             }]
                         }
                     }
+                });
+            }
+        });
+    }
+
+    function CountRetweeted() {
+        const vAuthor = $('#cmbAuthor').val();
+        const vJson = JSON.stringify({
+            "Author": vAuthor
+        });
+        const vEncode = encodeURIComponent(vJson);
+        $.ajax({
+            url: '/CountRetweeted/' + vEncode + '/',
+            dataType: 'JSON',
+            type: 'GET',
+            error: function (result) {
+                const result_json = "[" + result.responseText.replace(/}{/g, "},{").replace(/None/g, "'Sin Especificar'").replace(/'/g, "\"") + "]";
+                const result_obj = JSON.parse(result_json);
+
+                let dataset = [];
+                let labels = [];
+                result_obj.forEach(x => {
+                    dataset.push(x.value);
+                    labels.push(x._id);
+                });
+
+                const backgroundColor = getBackgroundColor(6);
+                const data = {
+                    datasets: [{
+                        data: dataset,
+                        backgroundColor: backgroundColor,
+                    }],
+                    labels: labels
+                };
+                const ctx = document.getElementById('chartRetweeted').getContext('2d');
+                if (chartRetweeted) {
+                    chartRetweeted.clear();
+                    chartRetweeted.destroy();
+                }
+                chartRetweeted = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: data,
+                    options: {}
                 });
             }
         });

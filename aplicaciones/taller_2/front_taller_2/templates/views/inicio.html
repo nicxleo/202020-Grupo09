@@ -9,10 +9,12 @@
     <link rel="stylesheet" href="{% static "lib/mdb/css/style.css" %}">
     <link rel="stylesheet" href="{% static "lib/chart/css/Chart.css" %}">
     <link rel="stylesheet" href="{% static "lib/report/css/report.css" %}">
+    <link rel="stylesheet" href="{% static "lib/select2/css/select2.css" %}">
     <script src="{% static "lib/jquery/js/jquery-3.4.1.min.js" %}"></script>
     <script src="{% static "lib/bootstrap/js/bootstrap.min.js" %}"></script>
     <script src="{% static "lib/chart/js/Chart.js" %}"></script>
-    <title>Taller 1 – Procesamiento escalable</title>
+    <script src="{% static "lib/select2/js/select2.full.min.js" %}"></script>
+    <title>Taller 2 – Repositorios NoSQL y análisis básico de contenido</title>
 </head>
 <body class="grey lighten-3">
 
@@ -41,9 +43,10 @@
                         <div class="row" style="display: inline;"><br/></div>
                         <div class="row">
                             <div class="col-md-1"></div>
-                            <div class="col-md-4 text-center">
-                                <select class="browser-default custom-select" id="cmbAuthor">
-                                    <option value="0" selected>Todos</option>
+                            <div class="col-md-4" style="padding-top: 15px;">
+                                <select class="browser-default custom-select browser-default" id="cmbAuthor"
+                                        data-live-search="true" data-placeholder="Seleccione una cuenta de Twitter.">
+                                    <option value="0">Todas las cuentas</option>
                                     {% for objAuthor in lstAuthor %}
                                         <option value="{{ objAuthor.id }}">{{ objAuthor.name }}</option>
                                     {% endfor %}
@@ -51,7 +54,7 @@
                             </div>
                             <div class="col-md-2"></div>
                             <div class="col-md-4 text-center">
-                                <button type="button" class="btn btn-info" onclick="EjecutarAnalisis();">
+                                <button type="button" class="btn btn-mdb-color" onclick="EjecutarAnalisis();">
                                     Obtener Resultados
                                 </button>
                             </div>
@@ -121,7 +124,7 @@
     let chartRetweeted;
 
     $(document).ready(function () {
-
+        $("#cmbAuthor").select2();
     });
 
     function EjecutarAnalisis() {

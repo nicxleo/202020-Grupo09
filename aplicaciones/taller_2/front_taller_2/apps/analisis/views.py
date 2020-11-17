@@ -221,3 +221,117 @@ def CountRetweeted(request, json):
     result = db.result_retweeted.find().sort("_id")
     client.close()
     return HttpResponse(result)
+
+
+def TablaScaleByRetweeted(request, json):
+    lstData = simplejson.loads(json)
+    objAuthor = lstData["Author"]
+    client = pymongo.MongoClient(URI_CONNECTION, serverSelectionTimeoutMS=MONGODB_TIMEOUT)
+    db = client["Grupo09"]
+    tweets = db["tweets"]
+
+    mapper = Code("""
+            function () {
+                var referenced_tweets = '';
+                if (this.referenced_tweets && this.referenced_tweets.length > 0) {
+                    referenced_tweets = this.referenced_tweets[0].type;
+                    
+                } else {
+                    referenced_tweets = 'regular';
+                }
+                var label = referenced_tweets + '-' + this.scale;
+                emit(label, 1);
+            }
+        """)
+    if objAuthor != "0":
+        mapper = Code("""
+                function () {
+                    if (this.author_id == % s) {
+                        var referenced_tweets = '';
+                        if (this.referenced_tweets && this.referenced_tweets.length > 0) {
+                            referenced_tweets = this.referenced_tweets[0].type;
+                            
+                        } else {
+                            referenced_tweets = 'regular';
+                        }
+                        var label = referenced_tweets + '-' + this.scale;
+                        emit(label, 1);
+                    }
+                }
+            """ % objAuthor)
+
+    reducer = Code("""
+            function (key, values) {
+                return Array.sum(values);
+            }
+        """)
+    tweets.map_reduce(mapper, reducer, "result_scale_retweeted")
+    result = db.result_scale_retweeted.find().sort("value", -1)
+    client.close()
+    return render(request, "views/tabla_scale_retweeted.html", context={"lstResult": result})
+
+
+def TablaScaleBySubjectivity(request, json):
+    lstData = simplejson.loads(json)
+    objAuthor = lstData["Author"]
+    client = pymongo.MongoClient(URI_CONNECTION, serverSelectionTimeoutMS=MONGODB_TIMEOUT)
+    db = client["Grupo09"]
+    tweets = db["tweets"]
+
+    mapper = Code("""
+            function () {
+                var label = this.scale + '-' + this.subjectivity;
+                emit(label, 1);
+            }
+        """)
+    if objAuthor != "0":
+        mapper = Code("""
+                function () {
+                    if (this.author_id == % s) {
+                        var label = this.scale + '-' + this.subjectivity;
+                        emit(label, 1);
+                    }
+                }
+            """ % objAuthor)
+
+    reducer = Code("""
+            function (key, values) {
+                return Array.sum(values);
+            }
+        """)
+    tweets.map_reduce(mapper, reducer, "result_scale_subjectivity")
+    result = db.result_scale_subjectivity.find().sort("value", -1)
+    client.close()
+    return render(request, "views/tabla_scale_subjectivity.html", context={"lstResult": result})
+
+
+def TablaHashtags(request, json):
+    lstData = simplejson.loads(json)
+    objAuthor = lstData["Author"]
+    client = pymongo.MongoClient(URI_CONNECTION, serverSelectionTimeoutMS=MONGODB_TIMEOUT)
+    db = client["Grupo09"]
+    hashtags = db["hashtags"]
+
+    mapper = Code("""
+            function () {
+                emit(this.hashtag, 1);
+            }
+        """)
+    if objAuthor != "0":
+        mapper = Code("""
+                function () {
+                    if (this.author_id == % s) {
+                        emit(this.hashtag, 1);
+                    }
+                }
+            """ % objAuthor)
+
+    reducer = Code("""
+            function (key, values) {
+                return Array.sum(values);
+            }
+        """)
+    hashtags.map_reduce(mapper, reducer, "result_hashtags")
+    result = db.result_hashtags.find().sort("value", -1)
+    client.close()
+    return render(request, "views/tabla_hashtags.html", context={"lstResult": result})

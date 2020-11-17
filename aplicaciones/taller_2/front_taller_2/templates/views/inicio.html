@@ -98,6 +98,18 @@
                                 <canvas id="chartDate"></canvas>
                             </div>
                         </div>
+                        <div class="row" style="display: inline;"><br/></div>
+                        <div class="row" style="display: inline;"><br/></div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div id="divTablaScaleByRetweeted"></div>
+                                <br><br>
+                                <div id="divTablaHashtags"></div>
+                            </div>
+                            <div class="col-md-6">
+                                <div id="divTablaScaleBySubjectivity"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -129,6 +141,9 @@
 
     function EjecutarAnalisis() {
         //TablaTag()
+        TablaScaleByRetweeted();
+        TablaScaleBySubjectivity();
+        TablaHashtags();
         ResumenTweet();
         ResumenWord();
         CountScale();
@@ -150,6 +165,54 @@
             type: 'GET',
             error: function (result) {
                 $("#divTablaTag").html(result.responseText)
+            }
+        });
+    }
+
+    function TablaScaleByRetweeted() {
+        const vAuthor = $('#cmbAuthor').val();
+        const vJson = JSON.stringify({
+            "Author": vAuthor
+        });
+        const vEncode = encodeURIComponent(vJson);
+        $.ajax({
+            url: '/TablaScaleByRetweeted/' + vEncode + '/',
+            dataType: 'JSON',
+            type: 'GET',
+            error: function (result) {
+                $("#divTablaScaleByRetweeted").html(result.responseText)
+            }
+        });
+    }
+
+    function TablaScaleBySubjectivity() {
+        const vAuthor = $('#cmbAuthor').val();
+        const vJson = JSON.stringify({
+            "Author": vAuthor
+        });
+        const vEncode = encodeURIComponent(vJson);
+        $.ajax({
+            url: '/TablaScaleBySubjectivity/' + vEncode + '/',
+            dataType: 'JSON',
+            type: 'GET',
+            error: function (result) {
+                $("#divTablaScaleBySubjectivity").html(result.responseText)
+            }
+        });
+    }
+
+    function TablaHashtags() {
+        const vAuthor = $('#cmbAuthor').val();
+        const vJson = JSON.stringify({
+            "Author": vAuthor
+        });
+        const vEncode = encodeURIComponent(vJson);
+        $.ajax({
+            url: '/TablaHashtags/' + vEncode + '/',
+            dataType: 'JSON',
+            type: 'GET',
+            error: function (result) {
+                $("#divTablaHashtags").html(result.responseText)
             }
         });
     }

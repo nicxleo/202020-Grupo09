@@ -1,0 +1,17 @@
+{% load app_filters %}
+<table class="table table-striped table-hover">
+    <thead>
+    <tr>
+        <th scope="col">Hashtag</th>
+        <th scope="col">#</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for objResult in lstResult %}
+        <tr>
+            <td>{{ objResult|get:"_id" }}</td>
+            <td>{{ objResult.value }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

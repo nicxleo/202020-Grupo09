@@ -5,13 +5,12 @@ MONGODB_PORT = "27017"
 MONGODB_TIMEOUT = 10000
 URI_CONNECTION = "mongodb://" + MONGODB_HOST + ":" + MONGODB_PORT + "/"
 
+print("###################### Start remove tweets #####################")
+client = pymongo.MongoClient(URI_CONNECTION, retryWrites=False, serverSelectionTimeoutMS=MONGODB_TIMEOUT)
 objLoop = True
+db = client["Grupo09"]
+tweets = db["tweets"]
 while objLoop:
-
-    client = pymongo.MongoClient(URI_CONNECTION, retryWrites=False, serverSelectionTimeoutMS=MONGODB_TIMEOUT)
-    db = client["Grupo09"]
-    tweets = db["tweets"]
-
     pipeline = [
         {
             u"$group": {
@@ -44,5 +43,6 @@ while objLoop:
             print(objTweet)
             objLoop = True
 
-    print("OK -- Connected to MongoDB at server %s" % (MONGODB_HOST))
-    client.close()
+print("OK -- Connected to MongoDB at server %s" % (MONGODB_HOST))
+client.close()
+print("###################### Finish remove tweets #####################")

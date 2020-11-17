@@ -1,0 +1,38 @@
+=== Run information ===
+
+Scheme:       weka.classifiers.functions.SMO -C 1.0 -L 0.001 -P 1.0E-12 -N 0 -V -1 -W 1 -K "weka.classifiers.functions.supportVector.PolyKernel -E 1.0 -C 250007" -calibrator "weka.classifiers.functions.Logistic -R 1.0E-8 -M -1 -num-decimal-places 4"
+Relation:     tweets-weka.filters.unsupervised.attribute.StringToWordVector-R2-W1000000-prune-rate-1.0-N0-L-stemmerweka.core.stemmers.NullStemmer-stopwords-handlerweka.core.stopwords.Null-M1-tokenizerweka.core.tokenizers.NGramTokenizer -max 2 -min 1 -delimiters " \r \" \r\n\t.,;:\'\"()?!\"."-weka.filters.unsupervised.attribute.Remove-R61-64,66-176-weka.filters.unsupervised.attribute.Remove-R62,64,67,70-81,84,86,88,93,95,98,100,102-103,106,108,110,112,114-119,121,123-125,127,129,131-132,134,136-137,139-140,142,144,146,148,150,152-154,156-157,159-weka.filters.unsupervised.attribute.Remove-R80-weka.filters.unsupervised.attribute.Remove-R546-563-weka.filters.unsupervised.attribute.Remove-R546-563-weka.filters.unsupervised.attribute.Remove-R545-563-weka.filters.unsupervised.attribute.Remove-R545-563-weka.filters.unsupervised.attribute.Remove-R545-549,551-weka.filters.unsupervised.attribute.Remove-R2854,2863-2865,2882,2884,2887,2891,2893
+Instances:    99
+Attributes:   2885
+              [list of attributes omitted]
+Test mode:    10-fold cross-validation
+
+=== Stratified cross-validation ===
+=== Summary ===
+
+Correctly Classified Instances          43               43.4343 %
+Incorrectly Classified Instances        56               56.5657 %
+Kappa statistic                          0.2378
+Mean absolute error                      0.3291
+Root mean squared error                  0.4199
+Relative absolute error                 87.9069 %
+Root relative squared error             97.0046 %
+Total Number of Instances               99     
+
+=== Detailed Accuracy By Class ===
+
+                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
+                 0.444    0.167    0.500      0.444    0.471      0.289    ?         ?         N
+                 0.478    0.105    0.579      0.478    0.524      0.400    ?         ?         M
+                 0.481    0.403    0.310      0.481    0.377      0.071    ?         ?         MM
+                 0.318    0.091    0.500      0.318    0.389      0.271    ?         ?         MMM
+Weighted Avg.    0.434    0.200    0.466      0.434    0.439      0.251    ?         ?         
+
+=== Confusion Matrix ===
+
+  a  b  c  d   <-- classified as
+ 12  2 12  1 |  a = N
+  4 11  7  1 |  b = M
+  5  4 13  5 |  c = MM
+  3  2 10  7 |  d = MMM
+

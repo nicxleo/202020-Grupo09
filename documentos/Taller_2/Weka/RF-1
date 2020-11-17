@@ -1,0 +1,38 @@
+=== Run information ===
+
+Scheme:       weka.classifiers.trees.RandomForest -P 100 -I 100 -num-slots 1 -K 0 -M 1.0 -V 0.001 -S 1
+Relation:     tweets-weka.filters.unsupervised.attribute.StringToWordVector-R2-W1000000-prune-rate-1.0-N0-L-stemmerweka.core.stemmers.NullStemmer-stopwords-handlerweka.core.stopwords.Null-M1-tokenizerweka.core.tokenizers.WordTokenizer -delimiters " \r\t., ;:\'\"()?!-¿¡+*&#$\%\\/=<>[]_`@\"."-weka.filters.unsupervised.attribute.Remove-R4-33,1083-1084,1091-1093,1095,1097-weka.filters.unsupervised.attribute.Remove-R10-27-weka.filters.unsupervised.attribute.Remove-R6-8-weka.filters.unsupervised.attribute.Remove-R4-7-weka.filters.unsupervised.attribute.Remove-R5-6
+Instances:    99
+Attributes:   1033
+              [list of attributes omitted]
+Test mode:    10-fold cross-validation
+
+=== Stratified cross-validation ===
+=== Summary ===
+
+Correctly Classified Instances          37               37.3737 %
+Incorrectly Classified Instances        62               62.6263 %
+Kappa statistic                          0.1554
+Mean absolute error                      0.3343
+Root mean squared error                  0.4087
+Relative absolute error                 89.2997 %
+Root relative squared error             94.4037 %
+Total Number of Instances               99     
+
+=== Detailed Accuracy By Class ===
+
+                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
+                 0.259    0.139    0.412      0.259    0.318      0.142    ?         ?         N
+                 0.522    0.184    0.462      0.522    0.490      0.324    ?         ?         M
+                 0.519    0.486    0.286      0.519    0.368      0.029    ?         ?         MM
+                 0.182    0.039    0.571      0.182    0.276      0.232    ?         ?         MMM
+Weighted Avg.    0.374    0.222    0.424      0.374    0.362      0.173    ?         ?         
+
+=== Confusion Matrix ===
+
+  a  b  c  d   <-- classified as
+  7  7 13  0 |  a = N
+  3 12  7  1 |  b = M
+  5  6 14  2 |  c = MM
+  2  1 15  4 |  d = MMM
+

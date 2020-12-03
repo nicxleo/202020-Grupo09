@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="{% static "lib/bootstrap/css/bootstrap.min.css" %}">
+    <link rel="stylesheet" href="{% static "lib/mdb/css/mdb.min.css" %}">
+    <link rel="stylesheet" href="{% static "lib/mdb/css/style.css" %}">
+    <link rel="stylesheet" href="{% static "lib/chart/css/Chart.css" %}">
+    <link rel="stylesheet" href="{% static "lib/report/css/report.css" %}">
+    <link rel="stylesheet" href="{% static "lib/select2/css/select2.css" %}">
+    <script src="{% static "lib/jquery/js/jquery-3.4.1.min.js" %}"></script>
+    <script src="{% static "lib/bootstrap/js/bootstrap.min.js" %}"></script>
+    <script src="{% static "lib/chart/js/Chart.js" %}"></script>
+    <script src="{% static "lib/select2/js/select2.full.min.js" %}"></script>
+    <title>Taller 3 – Análisis y enriquecimiento de información</title>
+</head>
+<body class="grey lighten-3">
+
+<!--Main Navigation-->
+<header>
+    <nav class="navbar fixed-top navbar-expand-lg navbar-light white scrolling-navbar">
+        <div class="container-fluid" style="height: 50px;">
+            <div style="font-weight: 500; font-size: 22px;color: #2E4053;">
+                Análisis de Información sobre Big Data
+            </div>
+            <div>
+                <i>Taller 3 – Análisis y enriquecimiento de información</i>
+            </div>
+        </div>
+    </nav>
+</header>
+<!--Main Navigation-->
+
+<!--Main layout-->
+<main class="pt-5 mx-lg-5">
+    <div class="container-fluid mt-5">
+        <div class="row wow fadeIn">
+            <div class="col-md-12 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row" style="display: inline;"><br/></div>
+                        <div class="row">
+                            <div class="col-md-1"></div>
+                            <div class="col-md-4" style="padding-top: 15px;">
+                                <select class="browser-default custom-select browser-default" id="cmbAuthor"
+                                        data-live-search="true" data-placeholder="Seleccione una cuenta de Twitter.">
+                                    <option value="0">Todas las cuentas</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2"></div>
+                            <div class="col-md-4 text-center">
+                                <button type="button" class="btn btn-mdb-color" onclick="EjecutarAnalisis();">
+                                    Obtener Resultados
+                                </button>
+                            </div>
+                            <div class="col-md-1"></div>
+                        </div>
+                        <div class="row" style="display: inline;"><br/></div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <canvas id="chartLocation"></canvas>
+                            </div>
+                        </div>
+                        <div class="row" style="display: inline;"><br/></div>
+                        <div class="row">
+                            <!--<div class="col-md-3">
+                                <div id="divTablaTag"></div>
+                            </div>-->
+                            <div class="col-md-6">
+                                <canvas id="chartScale"></canvas>
+                            </div>
+                            <div class="col-md-6">
+                                <canvas id="chartTag"></canvas>
+                            </div>
+                        </div>
+                        <div class="row" style="display: inline;"><br/></div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div id="divResumenWord"></div>
+                            </div>
+                            <div class="col-md-2"></div>
+                            <div class="col-md-6">
+                                <canvas id="chartRetweeted"></canvas>
+                            </div>
+                        </div>
+                        <div class="row" style="display: inline;"><br/></div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <canvas id="chartDate"></canvas>
+                            </div>
+                        </div>
+                        <div class="row" style="display: inline;"><br/></div>
+                        <div class="row" style="display: inline;"><br/></div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div id="divTablaScaleByRetweeted"></div>
+                                <br><br>
+                                <div id="divTablaHashtags"></div>
+                            </div>
+                            <div class="col-md-6">
+                                <div id="divTablaScaleBySubjectivity"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<!--Main layout-->
+
+<!--Footer-->
+<footer class="page-footer text-center font-small darken-2 mt-4 wow fadeIn" style="background-color: #2C3E50;">
+    <div class="footer-copyright py-3">
+        <p><b>Universidad de los Andes</b> © 2020 Copyright</p>
+        <p>Grupo 09</p>
+        <p>en.jimenez</p>
+    </div>
+</footer>
+<!--Footer-->
+</body>
+<script>
+    let chartLocation;
+
+    $(document).ready(function () {
+        $("#cmbAuthor").select2();
+    });
+
+    function EjecutarAnalisis() {
+        //ResumenTweet();
+        //ResumenWord();
+        CountLocation();
+    }
+
+    function ResumenWord() {
+        const vAuthor = $('#cmbAuthor').val();
+        const vJson = JSON.stringify({
+            "Author": vAuthor
+        });
+        const vEncode = encodeURIComponent(vJson);
+        $.ajax({
+            url: '/ResumenWord/' + vEncode + '/',
+            dataType: 'JSON',
+            type: 'GET',
+            error: function (result) {
+                $("#divResumenWord").html(result.responseText)
+            }
+        });
+    }
+
+    function CountLocation() {
+        //const vAuthor = $('#cmbAuthor').val();
+        const vJson = JSON.stringify({
+            "Author": "none"
+        });
+        const vEncode = encodeURIComponent(vJson);
+        $.ajax({
+            url: '/CountLocation/' + vEncode + '/',
+            dataType: 'JSON',
+            type: 'GET',
+            error: function (result) {
+                const result_json = "[" + result.responseText.replace(/}{/g, "},{").replace(/None/g, "'Sin Especificar'").replace(/'/g, "\"") + "]";
+                const result_obj = JSON.parse(result_json);
+
+                let dataset = [];
+                let labels = [];
+                result_obj.forEach(x => {
+                    dataset.push(x.value);
+                    labels.push(x._id);
+                });
+
+                const backgroundColor = getBackgroundColor(6);
+                const data = {
+                    datasets: [{
+                        data: dataset,
+                        backgroundColor: backgroundColor,
+                    }],
+                    labels: labels
+                };
+                const ctx = document.getElementById('chartLocation').getContext('2d');
+                if (chartLocation) {
+                    chartLocation.clear();
+                    chartLocation.destroy();
+                }
+                chartLocation = new Chart(ctx, {
+                    type: 'pie',
+                    data: data,
+                    options: {}
+                });
+            }
+        });
+    }
+
+    function getBackgroundColor(count) {
+        let backgroundColor = [];
+        for (let i = 1; i <= count; i++) {
+            backgroundColor.push(getRandomColor())
+        }
+        return backgroundColor;
+    }
+
+    function getRandomColor() {
+        const r = getRandomInt(50, 200);
+        const g = getRandomInt(50, 200);
+        const b = getRandomInt(50, 200);
+        const color = `rgba(${r}, ${g}, ${b}, 0.7)`;
+        return color;
+    }
+
+    function getRandomInt(min, max) {
+        return Math.floor(Math.random() * (max - min)) + min;
+    }
+
+    function SoloNumeros(e) {
+        return new RegExp("^[0-9]").test(e.key)
+    }
+</script>
+</html>

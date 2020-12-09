@@ -14,6 +14,9 @@
     <script src="{% static "lib/bootstrap/js/bootstrap.min.js" %}"></script>
     <script src="{% static "lib/chart/js/Chart.js" %}"></script>
     <script src="{% static "lib/select2/js/select2.full.min.js" %}"></script>
+    <script src="{% static "lib/tag-cloud/js/core.js" %}"></script>
+    <script src="{% static "lib/tag-cloud/js/wordCloud.js" %}"></script>
+    <script src="{% static "lib/tag-cloud/js/animated.js" %}"></script>
     <title>Taller 3 – Análisis y enriquecimiento de información</title>
 </head>
 <body class="grey lighten-3">
@@ -40,67 +43,127 @@
             <div class="col-md-12 mb-4">
                 <div class="card">
                     <div class="card-body">
-                        <div class="row" style="display: inline;"><br/></div>
-                        <div class="row">
-                            <div class="col-md-1"></div>
-                            <div class="col-md-4" style="padding-top: 15px;">
-                                <select class="browser-default custom-select browser-default" id="cmbAuthor"
-                                        data-live-search="true" data-placeholder="Seleccione una cuenta de Twitter.">
-                                    <option value="0">Todas las cuentas</option>
-                                </select>
+                        <nav>
+                            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                                <a class="nav-item nav-link active" id="nav-rss-tab" data-toggle="tab" href="#nav-rss"
+                                   role="tab" aria-controls="nav-rss" aria-selected="true">RSS</a>
+                                <a class="nav-item nav-link" id="nav-dbpedia-tab" data-toggle="tab" href="#nav-dbpedia"
+                                   role="tab" aria-controls="nav-dbpedia" aria-selected="false">DBPedia</a>
+                                <a class="nav-item nav-link" id="nav-tagcloud-tab" data-toggle="tab"
+                                   href="#nav-tagcloud" role="tab" aria-controls="nav-tagcloud" aria-selected="false">Tag
+                                    Cloud</a>
+                                <a class="nav-item nav-link" id="nav-entity-tab" data-toggle="tab" href="#nav-entity"
+                                   role="tab" aria-controls="nav-entity" aria-selected="false">Entidad</a>
                             </div>
-                            <div class="col-md-2"></div>
-                            <div class="col-md-4 text-center">
-                                <button type="button" class="btn btn-mdb-color" onclick="EjecutarAnalisis();">
-                                    Obtener Resultados
-                                </button>
+                        </nav>
+                        <div class="tab-content" id="nav-tabContent">
+                            <div class="tab-pane fade show active" id="nav-rss" role="tabpanel"
+                                 aria-labelledby="nav-rss-tab">
+                                <div class="row" style="display: inline;"><br/></div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div id="divResumenQuestions"></div>
+                                    </div>
+                                    <div class="col-md-1"></div>
+                                    <div class="col-md-4">
+                                        <div id="divResumenAnswers"></div>
+                                    </div>
+                                    <div class="col-md-2"></div>
+                                </div>
+                                <div class="row" style="display: inline;"><br/></div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <canvas id="chartAnswer"></canvas>
+                                    </div>
+                                </div>
+                                <div class="row" style="display: inline;"><br/></div>
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <div id="divResumenUsers"></div>
+                                    </div>
+                                    <div class="col-md-4"></div>
+                                    <div class="col-md-3"></div>
+                                </div>
+                                <div class="row" style="display: inline;"><br/></div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <canvas id="chartLocation"></canvas>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <canvas id="chartScore"></canvas>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-md-1"></div>
-                        </div>
-                        <div class="row" style="display: inline;"><br/></div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <canvas id="chartLocation"></canvas>
+                            <div class="tab-pane fade" id="nav-dbpedia" role="tabpanel"
+                                 aria-labelledby="nav-dbpedia-tab">
+                                <div class="row" style="display: inline;"><br/></div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div id="divTablaCurrency"></div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <canvas id="chartCurrency"></canvas>
+                                    </div>
+                                </div>
+                                <div class="row" style="display: inline;"><br/></div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <canvas id="chartSalaryDollar"></canvas>
+                                    </div>
+                                </div>
+                                <div class="row" style="display: inline;"><br/></div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <canvas id="chartSalaryEuro"></canvas>
+                                    </div>
+                                </div>
+                                <div class="row" style="display: inline;"><br/></div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <canvas id="chartSalaryPoundSterling"></canvas>
+                                    </div>
+                                </div>
+                                <div class="row" style="display: inline;"><br/></div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <canvas id="chartEmployees"></canvas>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="row" style="display: inline;"><br/></div>
-                        <div class="row">
-                            <!--<div class="col-md-3">
-                                <div id="divTablaTag"></div>
-                            </div>-->
-                            <div class="col-md-6">
-                                <canvas id="chartScale"></canvas>
+                            <div class="tab-pane fade" id="nav-tagcloud" role="tabpanel"
+                                 aria-labelledby="nav-tagcloud-tab">
+                                <div class="row" style="display: inline;"><br/></div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div style="height: 600px;" id="tagCloudQuestions"></div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-md-6">
-                                <canvas id="chartTag"></canvas>
-                            </div>
-                        </div>
-                        <div class="row" style="display: inline;"><br/></div>
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div id="divResumenWord"></div>
-                            </div>
-                            <div class="col-md-2"></div>
-                            <div class="col-md-6">
-                                <canvas id="chartRetweeted"></canvas>
-                            </div>
-                        </div>
-                        <div class="row" style="display: inline;"><br/></div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <canvas id="chartDate"></canvas>
-                            </div>
-                        </div>
-                        <div class="row" style="display: inline;"><br/></div>
-                        <div class="row" style="display: inline;"><br/></div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div id="divTablaScaleByRetweeted"></div>
-                                <br><br>
-                                <div id="divTablaHashtags"></div>
-                            </div>
-                            <div class="col-md-6">
-                                <div id="divTablaScaleBySubjectivity"></div>
+                            <div class="tab-pane fade" id="nav-entity" role="tabpanel"
+                                 aria-labelledby="nav-entity-tab">
+                                <div class="row" style="display: inline;"><br/></div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div id="divResumenEntities"></div>
+                                    </div>
+                                    <div class="col-md-1"></div>
+                                    <div class="col-md-4">
+                                        <div id="divResumenEntitiesQuestions"></div>
+                                    </div>
+                                    <div class="col-md-2"></div>
+                                </div>
+                                <div class="row" style="display: inline;"><br/></div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <canvas id="chartEntityQuestions"></canvas>
+                                    </div>
+                                </div>
+                                <div class="row" style="display: inline;"><br/></div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <canvas id="chartEntityAnswers"></canvas>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -117,47 +180,103 @@
         <p><b>Universidad de los Andes</b> © 2020 Copyright</p>
         <p>Grupo 09</p>
         <p>en.jimenez</p>
+        <p>of.forero41</p>
     </div>
 </footer>
 <!--Footer-->
 </body>
 <script>
+    let chartAnswer;
     let chartLocation;
+    let chartScore;
+    let chartCurrency;
+    let chartSalaryDollar;
+    let chartSalaryEuro;
+    let chartSalaryPoundSterling;
+    let chartEmployees;
+    let chartEntityQuestions;
+    let chartEntityAnswers;
 
     $(document).ready(function () {
-        $("#cmbAuthor").select2();
+        EjecutarAnalisis();
     });
 
     function EjecutarAnalisis() {
-        //ResumenTweet();
-        //ResumenWord();
+        ResumenQuestions();
+        ResumenAnswers();
+        ResumenUsers();
+        ResumenEntities();
+        ResumenEntitiesQuestions();
+        CountAnswer();
         CountLocation();
+        CountScore();
+        CountCurrency();
+        CountSalaryDollar();
+        CountSalaryEuro();
+        CountSalaryPoundSterling();
+        CountEmployees();
+        CountEntityQuestions();
+        TagCloudQuestions();
     }
 
-    function ResumenWord() {
-        const vAuthor = $('#cmbAuthor').val();
-        const vJson = JSON.stringify({
-            "Author": vAuthor
-        });
-        const vEncode = encodeURIComponent(vJson);
+    function ResumenQuestions() {
         $.ajax({
-            url: '/ResumenWord/' + vEncode + '/',
+            url: '/ResumenQuestions/None/',
             dataType: 'JSON',
             type: 'GET',
             error: function (result) {
-                $("#divResumenWord").html(result.responseText)
+                $("#divResumenQuestions").html(result.responseText)
             }
         });
     }
 
-    function CountLocation() {
-        //const vAuthor = $('#cmbAuthor').val();
-        const vJson = JSON.stringify({
-            "Author": "none"
-        });
-        const vEncode = encodeURIComponent(vJson);
+    function ResumenAnswers() {
         $.ajax({
-            url: '/CountLocation/' + vEncode + '/',
+            url: '/ResumenAnswers/None/',
+            dataType: 'JSON',
+            type: 'GET',
+            error: function (result) {
+                $("#divResumenAnswers").html(result.responseText)
+            }
+        });
+    }
+
+    function ResumenUsers() {
+        $.ajax({
+            url: '/ResumenUsers/None/',
+            dataType: 'JSON',
+            type: 'GET',
+            error: function (result) {
+                $("#divResumenUsers").html(result.responseText)
+            }
+        });
+    }
+
+    function ResumenEntities() {
+        $.ajax({
+            url: '/ResumenEntities/None/',
+            dataType: 'JSON',
+            type: 'GET',
+            error: function (result) {
+                $("#divResumenEntities").html(result.responseText)
+            }
+        });
+    }
+
+    function ResumenEntitiesQuestions() {
+        $.ajax({
+            url: '/ResumenEntitiesQuestions/None/',
+            dataType: 'JSON',
+            type: 'GET',
+            error: function (result) {
+                $("#divResumenEntitiesQuestions").html(result.responseText)
+            }
+        });
+    }
+
+    function CountAnswer() {
+        $.ajax({
+            url: '/CountAnswer/None',
             dataType: 'JSON',
             type: 'GET',
             error: function (result) {
@@ -171,7 +290,51 @@
                     labels.push(x._id);
                 });
 
-                const backgroundColor = getBackgroundColor(6);
+                const backgroundColor = getBackgroundColor(1);
+                const data = {
+                    datasets: [{
+                        data: dataset,
+                        backgroundColor: backgroundColor,
+                        label: "Cantidad de Respuestas por Pregunta"
+                    }],
+                    labels: labels
+                };
+                const ctx = document.getElementById('chartAnswer').getContext('2d');
+                if (chartAnswer) {
+                    chartAnswer.clear();
+                    chartAnswer.destroy();
+                }
+                chartAnswer = new Chart(ctx, {
+                    type: 'line',
+                    data: data,
+                    options: {
+                        title: {
+                            display: true,
+                            text: 'Cantidad de Respuestas por Pregunta'
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    function CountLocation() {
+        $.ajax({
+            url: '/CountLocation/None',
+            dataType: 'JSON',
+            type: 'GET',
+            error: function (result) {
+                const result_json = "[" + result.responseText.replace(/}{/g, "},{").replace(/None/g, "'Sin Especificar'").replace(/'/g, "\"") + "]";
+                const result_obj = JSON.parse(result_json);
+
+                let dataset = [];
+                let labels = [];
+                result_obj.forEach(x => {
+                    dataset.push(x.value);
+                    labels.push(x._id);
+                });
+
+                const backgroundColor = getBackgroundColor(15);
                 const data = {
                     datasets: [{
                         data: dataset,
@@ -187,8 +350,383 @@
                 chartLocation = new Chart(ctx, {
                     type: 'pie',
                     data: data,
-                    options: {}
+                    options: {
+                        title: {
+                            display: true,
+                            text: 'Usuarios por Ubicación'
+                        }
+                    }
                 });
+            }
+        });
+    }
+
+    function CountScore() {
+        $.ajax({
+            url: '/CountScore/None',
+            dataType: 'JSON',
+            type: 'GET',
+            error: function (result) {
+                const result_json = "[" + result.responseText.replace(/}{/g, "},{").replace(/None/g, "'Sin Especificar'").replace(/'/g, "\"") + "]";
+                const result_obj = JSON.parse(result_json);
+
+                let dataset = [];
+                let labels = [];
+                result_obj.forEach(x => {
+                    dataset.push(x.value);
+                    labels.push(x._id);
+                });
+
+                const backgroundColor = getBackgroundColor(25);
+                const data = {
+                    datasets: [{
+                        data: dataset,
+                        backgroundColor: backgroundColor,
+                        label: "Cantidad de Puntajes en Respuestas"
+                    }],
+                    labels: labels
+                };
+                const ctx = document.getElementById('chartScore').getContext('2d');
+                if (chartScore) {
+                    chartScore.clear();
+                    chartScore.destroy();
+                }
+                chartScore = new Chart(ctx, {
+                    type: 'bar',
+                    data: data,
+                    options: {
+                        title: {
+                            display: true,
+                            text: 'Cantidad de Puntajes en Respuestas'
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    function CountCurrency() {
+        $.ajax({
+            url: '/CountCurrency/None',
+            dataType: 'JSON',
+            type: 'GET',
+            error: function (result) {
+                const result_json = "[" + result.responseText.replace(/}{/g, "},{").replace(/None/g, "'Sin Especificar'").replace(/'/g, "\"") + "]";
+                const result_obj = JSON.parse(result_json);
+
+                let dataset = [];
+                let labels = [];
+                result_obj.forEach(x => {
+                    dataset.push(x.value);
+                    labels.push(x._id);
+                });
+
+                TablaCurrency(labels);
+
+                const backgroundColor = getBackgroundColor(25);
+                const data = {
+                    datasets: [{
+                        data: dataset,
+                        backgroundColor: backgroundColor,
+                        label: "Moneda por Paises"
+                    }],
+                    labels: labels
+                };
+                const ctx = document.getElementById('chartCurrency').getContext('2d');
+                if (chartCurrency) {
+                    chartCurrency.clear();
+                    chartCurrency.destroy();
+                }
+                chartCurrency = new Chart(ctx, {
+                    type: 'pie',
+                    data: data,
+                    options: {
+                        title: {
+                            display: true,
+                            text: 'Moneda por Paises'
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    function CountSalaryDollar() {
+        $.ajax({
+            url: '/CountSalaryDollar/None',
+            dataType: 'JSON',
+            type: 'GET',
+            error: function (result) {
+                const result_json = "[" + result.responseText.replace(/}{/g, "},{").replace(/None/g, "'Sin Especificar'").replace(/'/g, "\"") + "]";
+                const result_obj = JSON.parse(result_json);
+
+                let dataset = [];
+                let labels = [];
+                result_obj.forEach(x => {
+                    dataset.push(x.value);
+                    labels.push(x._id);
+                });
+
+                const backgroundColor = getBackgroundColor(25);
+                const data = {
+                    datasets: [{
+                        data: dataset,
+                        backgroundColor: backgroundColor,
+                        label: "Salario en Dólares"
+                    }],
+                    labels: labels
+                };
+                const ctx = document.getElementById('chartSalaryDollar').getContext('2d');
+                if (chartSalaryDollar) {
+                    chartSalaryDollar.clear();
+                    chartSalaryDollar.destroy();
+                }
+                chartSalaryDollar = new Chart(ctx, {
+                    type: 'bar',
+                    data: data,
+                    options: {
+                        title: {
+                            display: true,
+                            text: 'Salario en Dólares'
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    function CountSalaryEuro() {
+        $.ajax({
+            url: '/CountSalaryEuro/None',
+            dataType: 'JSON',
+            type: 'GET',
+            error: function (result) {
+                const result_json = "[" + result.responseText.replace(/}{/g, "},{").replace(/None/g, "'Sin Especificar'").replace(/'/g, "\"") + "]";
+                const result_obj = JSON.parse(result_json);
+
+                let dataset = [];
+                let labels = [];
+                result_obj.forEach(x => {
+                    dataset.push(x.value);
+                    labels.push(x._id);
+                });
+
+                const backgroundColor = getBackgroundColor(25);
+                const data = {
+                    datasets: [{
+                        data: dataset,
+                        backgroundColor: backgroundColor,
+                        label: "Salario en Euros"
+                    }],
+                    labels: labels
+                };
+                const ctx = document.getElementById('chartSalaryEuro').getContext('2d');
+                if (chartSalaryEuro) {
+                    chartSalaryEuro.clear();
+                    chartSalaryEuro.destroy();
+                }
+                chartSalaryEuro = new Chart(ctx, {
+                    type: 'bar',
+                    data: data,
+                    options: {
+                        title: {
+                            display: true,
+                            text: 'Salario en Euros'
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    function CountSalaryPoundSterling() {
+        $.ajax({
+            url: '/CountSalaryPoundSterling/None',
+            dataType: 'JSON',
+            type: 'GET',
+            error: function (result) {
+                const result_json = "[" + result.responseText.replace(/}{/g, "},{").replace(/None/g, "'Sin Especificar'").replace(/'/g, "\"") + "]";
+                const result_obj = JSON.parse(result_json);
+
+                let dataset = [];
+                let labels = [];
+                result_obj.forEach(x => {
+                    dataset.push(x.value);
+                    labels.push(x._id);
+                });
+
+                const backgroundColor = getBackgroundColor(25);
+                const data = {
+                    datasets: [{
+                        data: dataset,
+                        backgroundColor: backgroundColor,
+                        label: "Salario en Libra esterlina"
+                    }],
+                    labels: labels
+                };
+                const ctx = document.getElementById('chartSalaryPoundSterling').getContext('2d');
+                if (chartSalaryPoundSterling) {
+                    chartSalaryPoundSterling.clear();
+                    chartSalaryPoundSterling.destroy();
+                }
+                chartSalaryPoundSterling = new Chart(ctx, {
+                    type: 'bar',
+                    data: data,
+                    options: {
+                        title: {
+                            display: true,
+                            text: 'Salario en Libra esterlina'
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    function CountEmployees() {
+        $.ajax({
+            url: '/CountEmployees/None',
+            dataType: 'JSON',
+            type: 'GET',
+            error: function (result) {
+                const result_json = "[" + result.responseText.replace(/}{/g, "},{").replace(/None/g, "'Sin Especificar'").replace(/'/g, "\"") + "]";
+                const result_obj = JSON.parse(result_json);
+
+                let dataset = [];
+                let labels = [];
+                result_obj.forEach(x => {
+                    dataset.push(x.value);
+                    labels.push(x._id);
+                });
+
+                const backgroundColor = getBackgroundColor(25);
+                const data = {
+                    datasets: [{
+                        data: dataset,
+                        backgroundColor: backgroundColor,
+                        label: "Empleados por Empresa"
+                    }],
+                    labels: labels
+                };
+                const ctx = document.getElementById('chartEmployees').getContext('2d');
+                if (chartEmployees) {
+                    chartEmployees.clear();
+                    chartEmployees.destroy();
+                }
+                chartEmployees = new Chart(ctx, {
+                    type: 'polarArea',
+                    data: data,
+                    options: {
+                        title: {
+                            display: true,
+                            text: 'Empleados por Empresa'
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    function CountEntityQuestions() {
+        $.ajax({
+            url: '/CountEntityQuestions/None',
+            dataType: 'JSON',
+            type: 'GET',
+            error: function (result) {
+                const result_json = "[" + result.responseText.replace(/}{/g, "},{").replace(/None/g, "'Sin Especificar'").replace(/'/g, "\"") + "]";
+                const result_obj = JSON.parse(result_json);
+
+                let dataset = [];
+                let labels = [];
+                result_obj.forEach(x => {
+                    dataset.push(x.value);
+                    labels.push(x._id);
+                });
+
+                const backgroundColor = getBackgroundColor(1);
+                const data = {
+                    datasets: [{
+                        data: dataset,
+                        backgroundColor: backgroundColor,
+                        label: "Entidades presentes en los tags de las Preguntas"
+                    }],
+                    labels: labels
+                };
+                const ctx = document.getElementById('chartEntityQuestions').getContext('2d');
+                if (chartEntityQuestions) {
+                    chartEntityQuestions.clear();
+                    chartEntityQuestions.destroy();
+                }
+                chartEntityQuestions = new Chart(ctx, {
+                    type: 'line',
+                    data: data,
+                    options: {
+                        title: {
+                            display: true,
+                            text: "Entidades presentes en los tags de las Preguntas"
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    function TablaCurrency(pObject) {
+        const vJson = JSON.stringify(pObject);
+        const vEncode = encodeURIComponent(vJson);
+        $.ajax({
+            url: '/TablaCurrency/' + vEncode + '/',
+            dataType: 'JSON',
+            type: 'GET',
+            error: function (result) {
+                $("#divTablaCurrency").html(result.responseText)
+            }
+        });
+    }
+
+    function TagCloudQuestions() {
+        $.ajax({
+            url: '/CountTagQuestions/None',
+            dataType: 'JSON',
+            type: 'GET',
+            error: function (result) {
+                const result_json = "[" + result.responseText.replace(/}{/g, "},{").replace(/None/g, "'Sin Especificar'").replace(/'/g, "\"") + "]";
+                const result_obj = JSON.parse(result_json);
+
+                am4core.useTheme(am4themes_animated);
+                let chart = am4core.create("tagCloudQuestions", am4plugins_wordCloud.WordCloud);
+                chart.fontFamily = "Courier New";
+                let series = chart.series.push(new am4plugins_wordCloud.WordCloudSeries());
+                series.randomness = 0.1;
+                series.rotationThreshold = 0.5;
+
+                series.data = result_obj;
+
+                series.dataFields.word = "_id";
+                series.dataFields.value = "value";
+
+                series.heatRules.push({
+                    "target": series.labels.template,
+                    "property": "fill",
+                    "min": am4core.color("#0000CC"),
+                    "max": am4core.color("#CC00CC"),
+                    "dataField": "value"
+                });
+
+                series.labels.template.url = "https://money.stackexchange.com/questions/tagged/{word}";
+                series.labels.template.urlTarget = "_blank";
+                series.labels.template.tooltipText = "{word}: {value}";
+
+                let hoverState = series.labels.template.states.create("hover");
+                hoverState.properties.fill = am4core.color("#FF0000");
+
+                let subtitle = chart.titles.create();
+                subtitle.text = "(click para abrir)";
+
+                let title = chart.titles.create();
+                title.text = "Tags Populares de Money Stack Exchange";
+                title.fontSize = 20;
+                title.fontWeight = "800";
             }
         });
     }

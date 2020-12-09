@@ -60,7 +60,7 @@
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/templates/views" />
     <property name="list.type.of.created.stylesheet" value="CSS" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
@@ -72,10 +72,11 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Esteb\Documents\GitHub\202020-Grupo09\aplicaciones\taller_3\front_taller_3\templates\views" />
+      <recent name="C:\Users\Esteb\Documents\GitHub\202020-Grupo09\aplicaciones\taller_3\front_taller_3\static\lib\tag-cloud\js" />
       <recent name="C:\Users\Esteb\Documents\GitHub\202020-Grupo09\aplicaciones\taller_2\front_taller_2\templates\views" />
       <recent name="C:\Users\Esteb\PycharmProjects\front_taller_2\apps\analisis" />
       <recent name="C:\Users\Esteb\PycharmProjects\front_taller_2\templates" />
-      <recent name="C:\Users\Esteb\PycharmProjects\front_taller_2" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\Esteb\Documents\GitHub\202020-Grupo09\aplicaciones\taller_2\front_taller_2\static\lib\chart\css" />
@@ -85,7 +86,7 @@
   </component>
   <component name="RunManager">
     <configuration name="front_taller_3" type="Python.DjangoServer" factoryName="Django server">
-      <module name="front_taller_2" />
+      <module name="front_taller_3" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
@@ -94,7 +95,7 @@
       </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="" />
-      <option name="IS_MODULE_SDK" value="true" />
+      <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="launchJavascriptDebuger" value="false" />
@@ -131,6 +132,8 @@
       <workItem from="1605316100655" duration="2484000" />
       <workItem from="1606242353439" duration="15000" />
       <workItem from="1606619462769" duration="1907000" />
+      <workItem from="1607295800292" duration="5067000" />
+      <workItem from="1607350697748" duration="22712000" />
     </task>
     <servers />
   </component>
@@ -148,71 +151,5 @@
       </map>
     </option>
     <option name="oldMeFiltersMigrated" value="true" />
-  </component>
-  <component name="WindowStateProjectService">
-    <state x="96" y="0" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1606620935598">
-      <screen x="0" y="0" width="1280" height="680" />
-    </state>
-    <state x="96" y="0" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1280.680@0.0.1280.680" timestamp="1606620935598" />
-    <state x="401" y="142" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1606620673616">
-      <screen x="0" y="0" width="1280" height="680" />
-    </state>
-    <state x="401" y="142" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1280.680@0.0.1280.680" timestamp="1606620673616" />
-    <state x="372" y="239" width="488" height="409" key="#xdebugger.evaluate" timestamp="1605318944168">
-      <screen x="0" y="0" width="1280" height="680" />
-    </state>
-    <state x="372" y="239" width="488" height="409" key="#xdebugger.evaluate/0.0.1280.680@0.0.1280.680" timestamp="1605318944168" />
-    <state width="741" height="438" key="DebuggerActiveHint" timestamp="1604854732553">
-      <screen x="0" y="0" width="1280" height="680" />
-    </state>
-    <state width="741" height="438" key="DebuggerActiveHint/0.0.1280.680@0.0.1280.680" timestamp="1604854732553" />
-    <state x="421" y="95" key="FileChooserDialogImpl" timestamp="1606620565506">
-      <screen x="0" y="0" width="1280" height="680" />
-    </state>
-    <state x="421" y="95" key="FileChooserDialogImpl/0.0.1280.680@0.0.1280.680" timestamp="1606620565506" />
-    <state width="1237" height="85" key="GridCell.Tab.0.bottom" timestamp="1606621386893">
-      <screen x="0" y="0" width="1280" height="680" />
-    </state>
-    <state width="1237" height="85" key="GridCell.Tab.0.bottom/0.0.1280.680@0.0.1280.680" timestamp="1606621386893" />
-    <state width="1237" height="85" key="GridCell.Tab.0.center" timestamp="1606621386893">
-      <screen x="0" y="0" width="1280" height="680" />
-    </state>
-    <state width="1237" height="85" key="GridCell.Tab.0.center/0.0.1280.680@0.0.1280.680" timestamp="1606621386893" />
-    <state width="1237" height="85" key="GridCell.Tab.0.left" timestamp="1606621386893">
-      <screen x="0" y="0" width="1280" height="680" />
-    </state>
-    <state width="1237" height="85" key="GridCell.Tab.0.left/0.0.1280.680@0.0.1280.680" timestamp="1606621386893" />
-    <state width="1237" height="85" key="GridCell.Tab.0.right" timestamp="1606621386893">
-      <screen x="0" y="0" width="1280" height="680" />
-    </state>
-    <state width="1237" height="85" key="GridCell.Tab.0.right/0.0.1280.680@0.0.1280.680" timestamp="1606621386893" />
-    <state width="1237" height="85" key="GridCell.Tab.1.bottom" timestamp="1606621386895">
-      <screen x="0" y="0" width="1280" height="680" />
-    </state>
-    <state width="1237" height="85" key="GridCell.Tab.1.bottom/0.0.1280.680@0.0.1280.680" timestamp="1606621386895" />
-    <state width="1237" height="85" key="GridCell.Tab.1.center" timestamp="1606621386894">
-      <screen x="0" y="0" width="1280" height="680" />
-    </state>
-    <state width="1237" height="85" key="GridCell.Tab.1.center/0.0.1280.680@0.0.1280.680" timestamp="1606621386894" />
-    <state width="1237" height="85" key="GridCell.Tab.1.left" timestamp="1606621386893">
-      <screen x="0" y="0" width="1280" height="680" />
-    </state>
-    <state width="1237" height="85" key="GridCell.Tab.1.left/0.0.1280.680@0.0.1280.680" timestamp="1606621386893" />
-    <state width="1237" height="85" key="GridCell.Tab.1.right" timestamp="1606621386895">
-      <screen x="0" y="0" width="1280" height="680" />
-    </state>
-    <state width="1237" height="85" key="GridCell.Tab.1.right/0.0.1280.680@0.0.1280.680" timestamp="1606621386895" />
-    <state x="142" y="0" key="SettingsEditor" timestamp="1606620907656">
-      <screen x="0" y="0" width="1280" height="680" />
-    </state>
-    <state x="142" y="0" key="SettingsEditor/0.0.1280.680@0.0.1280.680" timestamp="1606620907656" />
-    <state x="346" y="73" width="589" height="534" key="find.popup" timestamp="1606620450242">
-      <screen x="0" y="0" width="1280" height="680" />
-    </state>
-    <state x="346" y="73" width="589" height="534" key="find.popup/0.0.1280.680@0.0.1280.680" timestamp="1606620450242" />
-    <state x="303" y="1" width="672" height="678" key="search.everywhere.popup" timestamp="1606619705972">
-      <screen x="0" y="0" width="1280" height="680" />
-    </state>
-    <state x="303" y="1" width="672" height="678" key="search.everywhere.popup/0.0.1280.680@0.0.1280.680" timestamp="1606619705972" />
   </component>
 </project>

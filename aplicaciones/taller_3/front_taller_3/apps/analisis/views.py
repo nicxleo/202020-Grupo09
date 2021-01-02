@@ -355,7 +355,7 @@ def CountTagQuestions(request, json):
         }
     """)
     questions.map_reduce(mapper, reducer, "result_tags_questions")
-    result = db.result_tags_questions.find().limit(200)
+    result = db.result_tags_questions.find().sort("value", pymongo.DESCENDING).limit(120)
     client.close()
     return HttpResponse(result)
 
